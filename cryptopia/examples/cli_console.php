@@ -23,28 +23,44 @@
   $exchange  = new CryptopiaApi($apiKey , $apiSecret );
 
   cls(); // clear screen
+
+  $_defaultMarket   = "BTC";
+  $_defaultCurrency = "ETH";
+  $defaultMarket    =  $_defaultCurrency . "-" . $_defaultMarket;
+  $market           = "";
+
+  // parse CLI args
   $args = array();
   if($argc>1) {
     parse_str(implode('&',array_slice($argv, 1)), $args);
   }
-  if(!isSet($args["market"])) {
-    fwrite(STDOUT, "Enter market-currency pair, for example ETH-BTC (default BTC-USDT): ");
-    // Read the input
-    $market = strtoupper(fgets(STDIN));
-  } else {
-    $market = strtoupper($args["market"]);
+  $_market    = isSet($args["market"]) ? $args["market"] : "";
+  $_currency  = isSet($args["currency"]) ? $args["currency"] : "";
+
+  if(!empty($_market) && !empty($_currency)) {
+    $market =  $_currency . "-" . $_market;
+  }
+
+  if(empty($market)) {
+    fwrite(STDOUT, "Enter market [$_defaultMarket] : ");
+    $_market = strtoupper(fgets(STDIN));
+    $_market = trim(preg_replace('/\s+/', '', $_market));
+    $_market  = empty($_market) ? $_defaultMarket : $_market;
+
+    fwrite(STDOUT, "Enter currency [$_defaultCurrency] : ");
+    $_currency = strtoupper(fgets(STDIN));
+    $_currency = trim(preg_replace('/\s+/', '', $_currency));
+    $_currency  = empty($_currency) ? $_defaultCurrency : $_currency;
+    
+    $market = $_currency . "-" . $_market;
   }
 
   $market = trim(preg_replace('/\s+/', '', $market));
-  if(empty($market)) {
-    $market = "BTC-USDT";
-  }
+  $market = empty($market) ? $defaultMarket : $market;
+  $market = trim(preg_replace('/\s+/', '', $market));
+  $market = strtoupper($market);
 
   fwrite(STDOUT, "Ready commands for : $market\n");
-  //listMenu();
-
-  $market = trim(preg_replace('/\s+/', '', $market));
-  $prevLast = 0;
   $command  = "";
 
   getTicker($exchange,$market);
@@ -79,7 +95,7 @@
       // place sell order
       case "s" : {
         fwrite(STDOUT, "[$market] Place sell order\n");
-        fwrite(STDOUT, "Units : ");
+        fwrite(STDOUT, "Ammount : ");
         $units = strtoupper(fgets(STDIN));
         if(!empty($units) && trim($units) != "") {
           $units  = number_format($units, 10, '.', '');
@@ -91,7 +107,7 @@
               fwrite(STDOUT, "$rate\n");
               $totalValue = $units * $rate;
               $totalValue  = number_format($totalValue, 10, '.', '');
-              fwrite(STDOUT, "Total : $totalValue\n");
+              fwrite(STDOUT, "Total value : $totalValue\n");
               if($sellOBJ = $exchange->sell(array("market" => $market,"amount"=>$units,"rate"=>$rate))) {
                 if($sellOBJ["success"] == true) {
                   fwrite(STDOUT, "[$market] Placed sell order: $units units at rate $rate ($totalValue)\n");
