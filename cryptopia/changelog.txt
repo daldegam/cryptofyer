@@ -1,0 +1,7 @@
+v0.2
+- refactored some code
+- cli_console.php
+- cli_watch.php
+
+v0.1
+It's alive

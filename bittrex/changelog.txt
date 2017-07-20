@@ -1,0 +1,15 @@
+v0.4
+- added sell function as an alias for sellLimit function
+- added buy function as an alias for buyLimit function
+- added getOrders function as an alias for getOpenOrders function
+
+v0.3
+- fixed url encoding when sending via cli
+- added getVersion() function
+
+v0.2
+- refactored some code
+- send function returns an object when method is not supplied
+
+v0.1
+It's alive

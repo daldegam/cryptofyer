@@ -1,0 +1,325 @@
+<?php
+  /*
+    This example file will loop and watch the last rate of a currency.
+    You can only run this example from command line!
+  */
+  if(php_sapi_name() != 'cli') die("you need to run this script from commandline!");
+
+  include("../../includes/cryptoexchange.class.php");
+
+  if(!file_exists("../bittrex_api.class.php")) die("cannot find ../bittrex_api.class.php");
+  include("../bittrex_api.class.php");
+
+  if(!file_exists("../config.inc.php")) die("cannot find ../config.inc.php");
+  include("../config.inc.php");
+
+  // you don't really this in production
+  if(!file_exists("../../includes/tools.inc.php")) die("cannot find ../../includes/tools.inc.php");
+  include("../../includes/tools.inc.php");
+
+  if(!isSet($apiKey)) die("please configure the apiKey");
+  if(!isSet($apiSecret)) die("please configure the apiSecret");
+
+  $exchange  = new BittrexxApi($apiKey , $apiSecret );
+
+  cls(); // clear screen
+  $args = array();
+  if($argc>1) {
+    parse_str(implode('&',array_slice($argv, 1)), $args);
+  }
+  if(!isSet($args["market"])) {
+    fwrite(STDOUT, "Enter market-currency pair, for example BTC-ETH (default USDT-BTC): ");
+    // Read the input
+    $market = strtoupper(fgets(STDIN));
+  } else {
+    $market = strtoupper($args["market"]);
+  }
+
+  $market = trim(preg_replace('/\s+/', '', $market));
+  if(empty($market)) {
+    $market = "USDT-BTC";
+  }
+
+  fwrite(STDOUT, "Ready commands for : $market\n");
+
+  $market = trim(preg_replace('/\s+/', '', $market));
+  $prevLast = 0;
+  $command  = "";
+
+  getTicker($exchange,$market);
+
+  do {
+    fwrite(STDOUT, "[$market] > ");
+    $command = fgets(STDIN);
+    $command = strtolower(trim(preg_replace('/\s+/', '', $command)));
+
+    switch($command) {
+
+      default : {
+        fwrite(STDOUT, "[$market] [ERROR] I don't know that command!\n\n");
+      }
+
+      // list menu
+      case "m" : {
+        listMenu($market);
+        break;
+      }
+
+      // quit
+      case "x" : {
+          $command  = "q";
+      }
+      case "q" : {
+        break;
+      }
+
+      // place sell order
+      case "s" : {
+        fwrite(STDOUT, "[$market] Place sell order\n");
+        fwrite(STDOUT, "Units : ");
+        $units = strtoupper(fgets(STDIN));
+        if(!empty($units) && trim($units) != "") {
+          $units  = number_format($units, 10, '.', '');
+          fwrite(STDOUT, "Rate : ");
+          $rate = strtoupper(fgets(STDIN));
+          if(!empty($rate) && trim($rate) != "") {
+              $rate  = number_format($rate, 10, '.', '');
+              if($sellOBJ = $exchange->sell(array("market" => $market,"quantity"=>$units,"rate"=>$rate))) {
+                if($sellOBJ["success"] == true) {
+                  $totalValue = $units * $rate;
+                  $totalValue  = number_format($totalValue, 10, '.', '');
+                  fwrite(STDOUT, "[$market] Placed sell order: $units units at rate $rate ($totalValue)\n");
+                  fwrite(STDOUT, "[$market] Returning to main menu\n");
+                  getTicker($exchange,$market);
+                } else {
+                  $error  = $sellOBJ["message"];
+                  fwrite(STDOUT, "[$market] [ERROR] $error\n");
+                  fwrite(STDOUT, "[$market] Returning to main menu\n");
+                  getTicker($exchange,$market);
+                }
+              } else {
+                fwrite(STDOUT, "[$market] [ERROR]\n");
+                fwrite(STDOUT, "[$market] Returning to main menu\n");
+                getTicker($exchange,$market);
+              }
+          } else {
+            fwrite(STDOUT, "[$market] Returning to main menu\n");
+            getTicker($exchange,$market);
+          }
+        } else {
+          fwrite(STDOUT, "[$market] Returning to main menu\n");
+          getTicker($exchange,$market);
+        }
+        break;
+      }
+
+      // place buy order
+      case "b" : {
+        fwrite(STDOUT, "[$market] Place buy order\n");
+        fwrite(STDOUT, "Units : ");
+        $units = strtoupper(fgets(STDIN));
+        if(!empty($units) && trim($units) != "") {
+          $units  = number_format($units, 10, '.', '');
+          fwrite(STDOUT, "$units\n");
+          fwrite(STDOUT, "Rate : ");
+          $rate = strtoupper(fgets(STDIN));
+          if(!empty($rate) && trim($rate) != "") {
+              $rate  = number_format($rate, 10, '.', '');
+              if($sellOBJ = $exchange->buy(array("market" => $market,"quantity"=>$units,"rate"=>$rate))) {
+                if($sellOBJ["success"] == true) {
+                  $totalValue = $units * $rate;
+                  $totalValue  = number_format($totalValue, 10, '.', '');
+                  fwrite(STDOUT, "[$market] Placed buy order: $units units at rate $rate ($totalValue)\n");
+                  fwrite(STDOUT, "[$market] Returning to main menu\n");
+                  getTicker($exchange,$market);
+                } else {
+                  $error  = $sellOBJ["message"];
+                  fwrite(STDOUT, "[$market] [ERROR] $error\n");
+                  fwrite(STDOUT, "[$market] Returning to main menu\n");
+                  getTicker($exchange,$market);
+                }
+              } else {
+                fwrite(STDOUT, "[$market] [ERROR]\n");
+                fwrite(STDOUT, "[$market] Returning to main menu\n");
+                getTicker($exchange,$market);
+              }
+          } else {
+            fwrite(STDOUT, "[$market] Returning to main menu\n");
+            getTicker($exchange,$market);
+          }
+        } else {
+          fwrite(STDOUT, "[$market] Returning to main menu\n");
+          getTicker($exchange,$market);
+        }
+        break;
+      }
+
+      // get ticker information
+      case "t" : {
+        getTicker($exchange,$market);
+        break;
+      }
+
+      case "c" : {
+        fwrite(STDOUT, "[$market] Cancel order\n");
+        $ordersOBJ  = $exchange->getOrders(array("market" => $market));
+        if(!empty($ordersOBJ)) {
+          if($ordersOBJ["success"]  == true) {
+            $counter  = 1;
+            fwrite(STDOUT, "[-1] cancel all\n");
+            fwrite(STDOUT, "[0] return to menu \n");
+
+            if(!empty($ordersOBJ["result"])) {
+              foreach($ordersOBJ["result"] as $item) {
+                $orderType    = $item["OrderType"];
+                $OrderUuid    = $item['OrderUuid'];
+                $Quantity     = $item['Quantity'];
+                $PricePerUnit = $item['Limit'];
+                $QuantityRemaining  = $item['QuantityRemaining'];
+
+                fwrite(STDOUT, "[$counter] $orderType $QuantityRemaining/$Quantity $PricePerUnit $OrderUuid \n");
+                $counter++;
+              }
+
+              fwrite(STDOUT, "Choose order to cancel : ");
+              $selectOrder = strtoupper(fgets(STDIN));
+              if(!empty($selectOrder)) {
+                if($selectOrder <= 0) {
+                  if($selectOrder == -1) {
+                    foreach($ordersOBJ["result"] as $item) {
+                      $cancelOrderOBJ = $exchange->cancel(array("uuid" => $item["OrderUuid"]));
+                      if(!empty($cancelOrderOBJ)) {
+                        if($cancelOrderOBJ["success"] == true) {
+                          $orderType    = $item["OrderType"];
+                          $OrderUuid    = $item['OrderUuid'];
+                          $Quantity     = $item['Quantity'];
+                          $PricePerUnit = $item['Limit'];
+                          $QuantityRemaining  = $item['QuantityRemaining'];
+                          fwrite(STDOUT, "[ORDER CANCELED] $orderType $QuantityRemaining/$Quantity $PricePerUnit $OrderUuid \n");
+                        } else {
+                          $error  = $cancelOrderOBJ["message"];
+                          fwrite(STDOUT, "[$market] [ERROR] $error\n");
+                        }
+                      }
+                    }
+                    fwrite(STDOUT, "[$market] Returning to main menu\n");
+                    getTicker($exchange,$market);
+                  } else {
+                    fwrite(STDOUT, "[$market] Returning to main menu\n");
+                    getTicker($exchange,$market);
+                  }
+                } else {
+                  $order  = $ordersOBJ["result"][$selectOrder-1];
+                  $cancelOrderOBJ = $exchange->cancel(array("uuid" => $order["OrderUuid"]));
+                  if(!empty($cancelOrderOBJ)) {
+                    if($cancelOrderOBJ["success"] == true) {
+                      $item         = $order;
+                      $orderType    = $item["OrderType"];
+                      $OrderUuid    = $item['OrderUuid'];
+                      $Quantity     = $item['Quantity'];
+                      $PricePerUnit = $item['Limit'];
+                      $QuantityRemaining  = $item['QuantityRemaining'];
+                      fwrite(STDOUT, "[ORDER CANCELED] $orderType $QuantityRemaining/$Quantity $PricePerUnit $OrderUuid \n");
+                      fwrite(STDOUT, "[$market] Returning to main menu\n");
+                      getTicker($exchange,$market);
+                    } else {
+                      $error  = $cancelOrderOBJ["message"];
+                      fwrite(STDOUT, "[$market] [ERROR] $error\n");
+                    }
+                  }
+                }
+              } else {
+                getTicker($exchange,$market);
+              }
+            } else {
+              fwrite(STDOUT, "[$market] You have no open orders, going back to main menu!\n");
+              getTicker($exchange,$market);
+            }
+
+            //---
+
+          } else {
+            $error  = $tickerOBJ["message"];
+            fwrite(STDOUT, "[ERROR] [API] $error\n");
+          }
+        }
+        break;
+      }
+
+      case "o" : {
+        getOrders($exchange,$market);
+        break;
+      }
+
+      case "cls" : { }
+      case "clear" : {
+        cls();
+        getTicker($exchange,$market);
+        break;
+      }
+    }
+
+  } while ($command != "q");
+
+  fwrite(STDOUT, "[EXIT] have a nice day\n");
+  exit(0);
+
+  function getOrders($exchange,$market) {
+    fwrite(STDOUT, "[$market] Fetching open orders for $market\n");
+    $ordersOBJ  = $exchange->getOrders(array("market" => $market));
+    if(!empty($ordersOBJ)) {
+      if($ordersOBJ["success"]  == true) {
+        if(!empty($ordersOBJ["result"])) {
+          foreach($ordersOBJ["result"] as $item) {
+            $orderType    = $item["OrderType"];
+            $OrderUuid    = $item['OrderUuid'];
+            $Quantity     = $item['Quantity'];
+            $PricePerUnit = $item['Limit'];
+            $QuantityRemaining  = $item['QuantityRemaining'];
+
+            fwrite(STDOUT, "$orderType $QuantityRemaining/$Quantity $PricePerUnit $OrderUuid \n");
+          }
+        } else {
+          fwrite(STDOUT, "[$market] You have no open orders, going back to main menu!\n");
+          getTicker($exchange,$market);
+        }
+      } else {
+        $error  = $ordersOBJ["message"];
+        fwrite(STDOUT, "[ERROR] [API] $error\n");
+      }
+      fwrite(STDOUT, "\n");
+    }
+  }
+
+  function getTicker($exchange,$market) {
+    fwrite(STDOUT, "[$market] Fetching ticket information for $market\n");
+    $tickerOBJ  = $exchange->getTicker(array("market" => $market));
+    if(!empty($tickerOBJ)) {
+      if($tickerOBJ["success"]  == true) {
+        $last = number_format($tickerOBJ["result"]["Last"], 10, '.', '');
+        $bid = number_format($tickerOBJ["result"]["Bid"], 10, '.', '');
+        $ask = number_format($tickerOBJ["result"]["Ask"], 10, '.', '');
+        fwrite(STDOUT, "Last = $last\n");
+        fwrite(STDOUT, "Bid = $bid\n");
+        fwrite(STDOUT, "Ask = $ask\n");
+      } else {
+        $error  = $tickerOBJ["message"];
+        fwrite(STDOUT, "[ERROR] [API] $error\n");
+      }
+      fwrite(STDOUT, "\n");
+    }
+  }
+
+  function listMenu($market) {
+    fwrite(STDOUT, "[$market] List of command(s) :\n");
+    fwrite(STDOUT, "[q] quit\n");
+    fwrite(STDOUT, "[m] menu\n");
+    fwrite(STDOUT, "[t] get ticker information\n");
+    fwrite(STDOUT, "[s] sell units\n");
+    fwrite(STDOUT, "[b] buy units\n");
+    fwrite(STDOUT, "[o] get open orders\n");
+    fwrite(STDOUT, "[c] cancel orders\n");
+    fwrite(STDOUT, "[cls] clear screen\n");
+    fwrite(STDOUT, "\n");
+  }
+?>
