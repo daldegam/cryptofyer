@@ -23,27 +23,44 @@
   $exchange  = new BittrexxApi($apiKey , $apiSecret );
 
   cls(); // clear screen
+
+  $_defaultMarket   = "BTC";
+  $_defaultCurrency = "ETH";
+  $defaultMarket    =  $_defaultMarket . "-" . $_defaultCurrency;
+  $market           = "";
+
+  // parse CLI args
   $args = array();
   if($argc>1) {
     parse_str(implode('&',array_slice($argv, 1)), $args);
   }
-  if(!isSet($args["market"])) {
-    fwrite(STDOUT, "Enter market-currency pair, for example BTC-ETH (default USDT-BTC): ");
-    // Read the input
-    $market = strtoupper(fgets(STDIN));
-  } else {
-    $market = strtoupper($args["market"]);
+  $_market    = isSet($args["market"]) ? $args["market"] : "";
+  $_currency  = isSet($args["currency"]) ? $args["currency"] : "";
+
+  if(!empty($_market) && !empty($_currency)) {
+    $market =  $_market . "-" . $_currency;
+  }
+
+  if(empty($market)) {
+    fwrite(STDOUT, "Enter market [$_defaultMarket] : ");
+    $_market = strtoupper(fgets(STDIN));
+    $_market = trim(preg_replace('/\s+/', '', $_market));
+    $_market  = empty($_market) ? $_defaultMarket : $_market;
+
+    fwrite(STDOUT, "Enter currency [$_defaultCurrency] : ");
+    $_currency = strtoupper(fgets(STDIN));
+    $_currency = trim(preg_replace('/\s+/', '', $_currency));
+    $_currency  = empty($_currency) ? $_defaultCurrency : $_currency;
+
+    $market = $_market . "-" . $_currency;
   }
 
   $market = trim(preg_replace('/\s+/', '', $market));
-  if(empty($market)) {
-    $market = "USDT-BTC";
-  }
+  $market = empty($market) ? $defaultMarket : $market;
+  $market = trim(preg_replace('/\s+/', '', $market));
+  $market = strtoupper($market);
 
   fwrite(STDOUT, "Ready commands for : $market\n");
-
-  $market = trim(preg_replace('/\s+/', '', $market));
-  $prevLast = 0;
   $command  = "";
 
   getTicker($exchange,$market);
@@ -76,7 +93,7 @@
       // place sell order
       case "s" : {
         fwrite(STDOUT, "[$market] Place sell order\n");
-        fwrite(STDOUT, "Units : ");
+        fwrite(STDOUT, "Ammount : ");
         $units = strtoupper(fgets(STDIN));
         if(!empty($units) && trim($units) != "") {
           $units  = number_format($units, 10, '.', '');
@@ -84,10 +101,11 @@
           $rate = strtoupper(fgets(STDIN));
           if(!empty($rate) && trim($rate) != "") {
               $rate  = number_format($rate, 10, '.', '');
+              $totalValue = $units * $rate;
+              $totalValue  = number_format($totalValue, 10, '.', '');
+              fwrite(STDOUT, "Total value: $totalValue\n");
               if($sellOBJ = $exchange->sell(array("market" => $market,"quantity"=>$units,"rate"=>$rate))) {
                 if($sellOBJ["success"] == true) {
-                  $totalValue = $units * $rate;
-                  $totalValue  = number_format($totalValue, 10, '.', '');
                   fwrite(STDOUT, "[$market] Placed sell order: $units units at rate $rate ($totalValue)\n");
                   fwrite(STDOUT, "[$market] Returning to main menu\n");
                   getTicker($exchange,$market);
@@ -116,7 +134,7 @@
       // place buy order
       case "b" : {
         fwrite(STDOUT, "[$market] Place buy order\n");
-        fwrite(STDOUT, "Units : ");
+        fwrite(STDOUT, "Ammount : ");
         $units = strtoupper(fgets(STDIN));
         if(!empty($units) && trim($units) != "") {
           $units  = number_format($units, 10, '.', '');
@@ -125,10 +143,11 @@
           $rate = strtoupper(fgets(STDIN));
           if(!empty($rate) && trim($rate) != "") {
               $rate  = number_format($rate, 10, '.', '');
+              $totalValue = $units * $rate;
+              $totalValue  = number_format($totalValue, 10, '.', '');
+              fwrite(STDOUT, "Total value $totalValue\n");
               if($sellOBJ = $exchange->buy(array("market" => $market,"quantity"=>$units,"rate"=>$rate))) {
                 if($sellOBJ["success"] == true) {
-                  $totalValue = $units * $rate;
-                  $totalValue  = number_format($totalValue, 10, '.', '');
                   fwrite(STDOUT, "[$market] Placed buy order: $units units at rate $rate ($totalValue)\n");
                   fwrite(STDOUT, "[$market] Returning to main menu\n");
                   getTicker($exchange,$market);
