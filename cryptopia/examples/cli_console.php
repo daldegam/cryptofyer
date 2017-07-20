@@ -51,7 +51,7 @@
     $_currency = strtoupper(fgets(STDIN));
     $_currency = trim(preg_replace('/\s+/', '', $_currency));
     $_currency  = empty($_currency) ? $_defaultCurrency : $_currency;
-    
+
     $market = $_currency . "-" . $_market;
   }
 
@@ -138,7 +138,7 @@
       // place buy order
       case "b" : {
         fwrite(STDOUT, "[$market] Place buy order\n");
-        fwrite(STDOUT, "Units : ");
+        fwrite(STDOUT, "Ammount : ");
         $units = strtoupper(fgets(STDIN));
         if(!empty($units) && trim($units) != "") {
           $units  = number_format($units, 10, '.', '');
