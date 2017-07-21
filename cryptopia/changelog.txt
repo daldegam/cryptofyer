@@ -1,3 +1,6 @@
+v0.3
+- Added interface
+
 v0.2
 - refactored some code
 - cli_console.php

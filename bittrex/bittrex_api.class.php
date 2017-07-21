@@ -4,17 +4,17 @@
   * @package    cryptofyer
   * @class    BittrexxApi
   * @author     Fransjo Leihitu
-  * @version    0.4
+  * @version    0.5
   *
   * API Documentation : https://bittrex.com/home/api
   */
-  class BittrexxApi extends CryptoExchange {
+  class BittrexxApi extends CryptoExchange implements CryptoExchangeInterface{
 
     private $exchangeUrl  = "https://bittrex.com/api/";
     private $apiVersion   = "1.1";
 
     private $_version_major  = "0";
-    private $_version_minor  = "4";
+    private $_version_minor  = "5";
 
     public function __construct($apiKey = null , $apiSecret = null)
     {

@@ -4,17 +4,17 @@
   * @package    cryptofyer
   * @class CryptopiaApi
   * @author     Fransjo Leihitu
-  * @version    0.2
+  * @version    0.3
   *
   * Documentation Public Api : https://www.cryptopia.co.nz/Forum/Thread/255
   * Documentation Private Api : https://www.cryptopia.co.nz/Forum/Thread/256
   */
-  class CryptopiaApi extends CryptoExchange {
+  class CryptopiaApi extends CryptoExchange implements CryptoExchangeInterface {
 
     private $exchangeUrl   = "https://www.cryptopia.co.nz/Api/";
 
     private $_version_major  = "0";
-    private $_version_minor  = "2";
+    private $_version_minor  = "3";
 
     public function __construct($apiKey = null , $apiSecret = null)
     {

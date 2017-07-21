@@ -1,3 +1,6 @@
+v0.5
+- Added interface
+
 v0.4
 - added sell function as an alias for sellLimit function
 - added buy function as an alias for buyLimit function
