@@ -1,3 +1,7 @@
+v0.4
+- Added alternative method to compose market/currency string
+- Using getErrorReturn
+
 v0.3
 - Added interface
 
