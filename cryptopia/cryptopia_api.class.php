@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class CryptopiaApi
   * @author     Fransjo Leihitu
-  * @version    0.3
+  * @version    0.4
   *
   * Documentation Public Api : https://www.cryptopia.co.nz/Forum/Thread/255
   * Documentation Private Api : https://www.cryptopia.co.nz/Forum/Thread/256
@@ -14,7 +14,7 @@
     private $exchangeUrl   = "https://www.cryptopia.co.nz/Api/";
 
     private $_version_major  = "0";
-    private $_version_minor  = "3";
+    private $_version_minor  = "4";
 
     public function __construct($apiKey = null , $apiSecret = null)
     {
@@ -26,7 +26,7 @@
     }
 
     private function send($method = null , $args = array() , $secure = true) {
-      if(empty($method)) return array("status" => false , "error" => "method was not defined!");
+      if(empty($method)) return $this->getErrorReturn("method was not defined!");
 
       $urlParams  = $args;
       $uri  = $this->getBaseUrl() . $method;
@@ -90,7 +90,9 @@
     }
 
     public function getOrders($args  = null) {
-
+      if(isSet($args["_market"]) && isSet($args["_currency"])) {
+        $args["market"] = $args["_currency"] . "-" . $args["_market"];
+      }
       if(isSet($args["market"])) {
         $args["market"]=strtoupper(str_replace("-","_",$args["market"]));
         $args["market"]=strtoupper(str_replace("/","_",$args["market"]));
@@ -98,37 +100,30 @@
         $args["market"] = "";
       }
 
-      $response = $this->send("GetOpenOrders" , $args);
-      /*
-      if(isSet($response["result"]) && !empty($response["result"])) {
-        $result = $response["result"];
-        $result["Last"] = $result["LastPrice"];
-        $result["Bid"] = $result["BidPrice"];
-        $result["Ask"] = $result["AskPrice"];
-        $response["result"] = $result;
-      }
-      */
-      return $response;
+      return $this->send("GetOpenOrders" , $args);
     }
 
     public function cancel($args = null) {
-      if(!isSet($args["Type"])) return array("status" => false , "error" => "required parameter: Type");
+      if(!isSet($args["Type"])) return $this->getErrorReturn("required parameter: Type");
       return $this->send("CancelTrade" , $args);
     }
 
     public function buy($args = null) {
-      if(!isSet($args["market"])) return array("status" => false , "error" => "required parameter: market");
+      if(isSet($args["_market"]) && isSet($args["_currency"])) {
+        $args["market"] = $args["_currency"] . "-" . $args["_market"];
+      }
+      if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
       $args["Market"] = $args["market"];
       unset($args["market"]);
       $args["Market"]=strtoupper(str_replace("-","/",$args["Market"]));
 
       if(!isSet($args["Type"])) $args["Type"] = "Buy";
 
-      if(!isSet($args["rate"])) return array("status" => false , "error" => "required parameter: rate");
+      if(!isSet($args["rate"])) return $this->getErrorReturn("required parameter: rate");
       $args["Rate"] = $args["rate"];
       unset($args["rate"]);
 
-      if(!isSet($args["amount"])) return array("status" => false , "error" => "required parameter: amount");
+      if(!isSet($args["amount"])) return $this->getErrorReturn("required parameter: amount");
       $args["Amount"] = $args["amount"];
       unset($args["amount"]);
 
@@ -136,18 +131,21 @@
     }
 
     public function sell($args = null) {
-      if(!isSet($args["market"])) return array("status" => false , "error" => "required parameter: market");
+      if(isSet($args["_market"]) && isSet($args["_currency"])) {
+        $args["market"] = $args["_currency"] . "-" . $args["_market"];
+      }
+      if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
       $args["Market"] = $args["market"];
       unset($args["market"]);
       $args["Market"]=strtoupper(str_replace("-","/",$args["Market"]));
 
       if(!isSet($args["Type"])) $args["Type"] = "Sell";
 
-      if(!isSet($args["rate"])) return array("status" => false , "error" => "required parameter: rate");
+      if(!isSet($args["rate"])) return $this->getErrorReturn("required parameter: rate");
       $args["Rate"] = $args["rate"];
       unset($args["rate"]);
 
-      if(!isSet($args["amount"])) return array("status" => false , "error" => "required parameter: amount");
+      if(!isSet($args["amount"])) return $this->getErrorReturn("required parameter: amount");
       $args["Amount"] = $args["amount"];
       unset($args["amount"]);
 
@@ -155,7 +153,10 @@
     }
 
     public function getTicker($args  = null) {
-      if(!isSet($args["market"])) return array("status" => false , "error" => "required parameter: market");
+      if(isSet($args["_market"]) && isSet($args["_currency"])) {
+        $args["market"] = $args["_currency"] . "-" . $args["_market"];
+      }
+      if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
       $args["market"]=strtoupper(str_replace("-","_",$args["market"]));
       $args["market"]=strtoupper(str_replace("/","_",$args["market"]));
 
