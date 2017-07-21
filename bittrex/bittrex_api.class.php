@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class    BittrexxApi
   * @author     Fransjo Leihitu
-  * @version    0.5
+  * @version    0.6
   *
   * API Documentation : https://bittrex.com/home/api
   */
@@ -14,7 +14,7 @@
     private $apiVersion   = "1.1";
 
     private $_version_major  = "0";
-    private $_version_minor  = "5";
+    private $_version_minor  = "6";
 
     public function __construct($apiKey = null , $apiSecret = null)
     {
@@ -77,12 +77,18 @@
     }
 
     public function getTicker($args = null) {
-      if(!isSet($args["market"])) return array("status" => false , "error" => "required parameter: market");
+      if(isSet($args["_market"]) && isSet($args["_currency"])) {
+        $args["market"] = $args["_market"] . "-" . $args["_currency"];
+      }
+      if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
       return $this->send("public/getticker" , $args, false);
     }
 
     public function getMarketSummary($args = null) {
-      if(!isSet($args["market"])) return array("status" => false , "error" => "required parameter: market");
+      if(isSet($args["_market"]) && isSet($args["_currency"])) {
+        $args["market"] = $args["_market"] . "-" . $args["_currency"];
+      }
+      if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
       return $this->send("public/getmarketsummary" , $args , false);
     }
 
@@ -90,13 +96,19 @@
       /*
         optional : depth
       */
-      if(!isSet($args["market"])) return array("status" => false , "error" => "required parameter: market");
-      if(!isSet($args["type"])) return array("status" => false , "error" => "required parameter: type");
+      if(isSet($args["_market"]) && isSet($args["_currency"])) {
+        $args["market"] = $args["_market"] . "-" . $args["_currency"];
+      }
+      if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
+      if(!isSet($args["type"])) return $this->getErrorReturn("required parameter: type");
       return $this->send("public/getmarketsummary" , $args , false);
     }
 
     public function getMarketHistory($args = null) {
-      if(!isSet($args["market"])) return array("status" => false , "error" => "required parameter: market");
+      if(isSet($args["_market"]) && isSet($args["_currency"])) {
+        $args["market"] = $args["_market"] . "-" . $args["_currency"];
+      }
+      if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
       return $this->send("public/getmarkethistory" , $args , false);
     }
 
@@ -108,25 +120,34 @@
 
     /* ------ BEGIN market api methodes ------ */
     public function buy($args = null) {
-      if(!isSet($args["market"])) return array("status" => false , "error" => "required parameter: market");
-      if(!isSet($args["quantity"])) return array("status" => false , "error" => "required parameter: quantity");
-      if(!isSet($args["rate"])) return array("status" => false , "error" => "required parameter: rate");
+      if(isSet($args["_market"]) && isSet($args["_currency"])) {
+        $args["market"] = $args["_market"] . "-" . $args["_currency"];
+      }
+      if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
+      if(!isSet($args["quantity"])) return $this->getErrorReturn("required parameter: quantity");
+      if(!isSet($args["rate"])) return $this->getErrorReturn("required parameter: rate");
       return $this->send("market/buylimit" , $args);
     }
 
     public function sell($args = null) {
-      if(!isSet($args["market"])) return array("status" => false , "error" => "required parameter: market");
-      if(!isSet($args["quantity"])) return array("status" => false , "error" => "required parameter: quantity");
-      if(!isSet($args["rate"])) return array("status" => false , "error" => "required parameter: rate");
+      if(isSet($args["_market"]) && isSet($args["_currency"])) {
+        $args["market"] = $args["_market"] . "-" . $args["_currency"];
+      }
+      if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
+      if(!isSet($args["quantity"])) return $this->getErrorReturn("required parameter: quantity");
+      if(!isSet($args["rate"])) return $this->getErrorReturn("required parameter: rate");
       return $this->send("market/selllimit" , $args);
     }
 
     public function cancel($args = null) {
-      if(!isSet($args["uuid"])) return array("status" => false , "error" => "required parameter: uuid");
+      if(!isSet($args["uuid"])) return $this->getErrorReturn("required parameter: uuid");
       return $this->send("market/cancel" , $args);
     }
 
     public function getOrders($args = null) {
+      if(isSet($args["_market"]) && isSet($args["_currency"])) {
+        $args["market"] = $args["_market"] . "-" . $args["_currency"];
+      }
       return $this->send("market/getopenorders" , $args);
     }
     /* ------ END market api methodes ------ */
@@ -140,12 +161,12 @@
     }
 
     public function getBalance($args = null) {
-      if(!isSet($args["currency"])) return array("status" => false , "error" => "required parameter: currency");
+      if(!isSet($args["currency"])) return $this->getErrorReturn("required parameter: currency");
       return $this->send("account/getbalance" , $args);
     }
 
     public function getDepositAddress($args = null) {
-      if(!isSet($args["currency"])) return array("status" => false , "error" => "required parameter: currency");
+      if(!isSet($args["currency"])) return $this->getErrorReturn("required parameter: currency");
       return $this->send("account/getdepositaddress" , $args);
     }
 
@@ -155,30 +176,33 @@
         optional : address
       */
 
-      if(!isSet($args["currency"])) return array("status" => false , "error" => "required parameter: currency");
-      if(!isSet($args["quantity"])) return array("status" => false , "error" => "required parameter: quantity");
-      if(!isSet($args["address"])) return array("status" => false , "error" => "required parameter: address");
+      if(!isSet($args["currency"])) return $this->getErrorReturn("required parameter: currency");
+      if(!isSet($args["quantity"])) return $this->getErrorReturn("required parameter: quantity");
+      if(!isSet($args["address"])) return $this->getErrorReturn("required parameter: address");
 
       return $this->send("account/withdraw" , $args);
     }
 
     public function getOrder($args = null) {
-      if(!isSet($args["uuid"])) return array("status" => false , "error" => "required parameter: uuid");
+      if(!isSet($args["uuid"])) return $this->getErrorReturn("required parameter: uuid");
       return $this->send("account/getorder" , $args);
     }
 
     public function getOrderHistory($args = null) {
-      if(!isSet($args["market"])) return array("status" => false , "error" => "required parameter: market");
+      if(isSet($args["_market"]) && isSet($args["_currency"])) {
+        $args["market"] = $args["_market"] . "-" . $args["_currency"];
+      }
+      if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
       return $this->send("account/getorderhistory" , $args);
     }
 
     public function getWithdrawalHistory($args = null) {
-      if(!isSet($args["currency"])) return array("status" => false , "error" => "required parameter: currency");
+      if(!isSet($args["currency"])) return $this->getErrorReturn("required parameter: currency");
       return $this->send("account/getwithdrawalhistory" , $args);
     }
 
     public function getDepositHistory($args = null) {
-      if(!isSet($args["currency"])) return array("status" => false , "error" => "required parameter: currency");
+      if(!isSet($args["currency"])) return $this->getErrorReturn("required parameter: currency");
       return $this->send("account/getdeposithistory" , $args);
     }
 
