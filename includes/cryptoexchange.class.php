@@ -1,4 +1,5 @@
 <?php
+  include("cryptoexchange.interface.php");
   /*
   *
   * @package    cryptofyer
