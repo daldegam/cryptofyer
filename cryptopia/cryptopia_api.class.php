@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class CryptopiaApi
   * @author     Fransjo Leihitu
-  * @version    0.7
+  * @version    0.8
   *
   * Documentation Public Api : https://www.cryptopia.co.nz/Forum/Thread/255
   * Documentation Private Api : https://www.cryptopia.co.nz/Forum/Thread/256
@@ -19,7 +19,7 @@
 
     // class version
     private $_version_major  = "0";
-    private $_version_minor  = "7";
+    private $_version_minor  = "8";
 
     public function __construct($apiKey = null , $apiSecret = null)
     {
@@ -76,6 +76,10 @@
       }
     }
 
+    public function getMarketPair($market = "" , $currency = "") {
+      return strtoupper($currency . "-" . $market);
+    }
+
     public function getCurrencyUrl($args = null) {
       if(isSet($args["_market"]) && isSet($args["_currency"])) {
         $args["market"] =  $args["_currency"] . "_" . $args["_market"];
@@ -105,7 +109,7 @@
 
     public function getOrders($args  = null) {
       if(isSet($args["_market"]) && isSet($args["_currency"])) {
-        $args["market"] = $args["_currency"] . "-" . $args["_market"];
+        $args["market"] = $this->getMarketPair($args["_market"],$args["_currency"]);
       }
       if(isSet($args["market"])) {
         $args["market"]=strtoupper(str_replace("-","_",$args["market"]));
@@ -124,7 +128,7 @@
 
     public function buy($args = null) {
       if(isSet($args["_market"]) && isSet($args["_currency"])) {
-        $args["market"] = $args["_currency"] . "-" . $args["_market"];
+        $args["market"] = $this->getMarketPair($args["_market"],$args["_currency"]);
       }
       if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
       $args["Market"] = $args["market"];
@@ -146,7 +150,7 @@
 
     public function sell($args = null) {
       if(isSet($args["_market"]) && isSet($args["_currency"])) {
-        $args["market"] = $args["_currency"] . "-" . $args["_market"];
+        $args["market"] = $this->getMarketPair($args["_market"],$args["_currency"]);
       }
       if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
       $args["Market"] = $args["market"];
@@ -168,7 +172,7 @@
 
     public function getTicker($args  = null) {
       if(isSet($args["_market"]) && isSet($args["_currency"])) {
-        $args["market"] = $args["_currency"] . "-" . $args["_market"];
+        $args["market"] = $this->getMarketPair($args["_market"],$args["_currency"]);
       }
       if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
       $args["market"]=strtoupper(str_replace("-","_",$args["market"]));
@@ -189,7 +193,7 @@
 
     public function getOrderbook($args  = null) {
       if(isSet($args["_market"]) && isSet($args["_currency"])) {
-        $args["market"] = $args["_currency"] . "-" . $args["_market"];
+        $args["market"] = $this->getMarketPair($args["_market"],$args["_currency"]);
       }
       if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
       $args["market"]=strtoupper(str_replace("-","_",$args["market"]));

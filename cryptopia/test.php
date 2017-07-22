@@ -10,8 +10,9 @@
 
   $exchange  = new CryptopiaApi($apiKey , $apiSecret );
 
-  $currency = "BTC";
-  $market   = "BTC_USDT";
+  $_market = "USDT";
+  $_currency = "BTC";
+  $market   = $exchange->getMarketPair($market , $_currency);
 
 
   echo "<h1>Version</h1>";
@@ -19,10 +20,10 @@
   debug($result);
 
   echo "<h1>Get Balance</h1>";
-  $result = $exchange->getBalance(array("currency" => $currency));
+  $result = $exchange->getBalance(array("currency" => $_currency));
   debug($result);
 
   echo "<h1>Ticker</h1>";
-  $result = $exchange->getTicker(array("market" => $market));
+  $result = $exchange->getTicker(array("_market" => $_market , "_currency" => $_currency));
   debug($result);
 ?>
