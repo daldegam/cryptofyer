@@ -195,7 +195,11 @@
       $args["market"]=strtoupper(str_replace("-","_",$args["market"]));
       $args["market"]=strtoupper(str_replace("/","_",$args["market"]));
 
-      $orderCount  = isSet($args["orderCount"]) ? "/" . $args["orderCount"] : "";
+      if(isSet($args["depth"])) {
+        $orderCount  = isSet($args["depth"]) ? "/" . $args["depth"] : "";
+      } else {
+        $orderCount  = isSet($args["orderCount"]) ? "/" . $args["orderCount"] : "";
+      }
 
       $response = $this->send("GetMarketOrders/".$args["market"].$orderCount, null , false);
       return $response;
