@@ -1,3 +1,6 @@
+v0.6
+- added getMarketOrders
+
 v0.5
 - added currency url
 

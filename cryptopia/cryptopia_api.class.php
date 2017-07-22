@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class CryptopiaApi
   * @author     Fransjo Leihitu
-  * @version    0.5
+  * @version    0.6
   *
   * Documentation Public Api : https://www.cryptopia.co.nz/Forum/Thread/255
   * Documentation Private Api : https://www.cryptopia.co.nz/Forum/Thread/256
@@ -19,7 +19,7 @@
 
     // class version
     private $_version_major  = "0";
-    private $_version_minor  = "5";
+    private $_version_minor  = "6";
 
     public function __construct($apiKey = null , $apiSecret = null)
     {
@@ -184,6 +184,20 @@
         $result["Ask"] = $result["AskPrice"];
         $response["result"] = $result;
       }
+      return $response;
+    }
+
+    public function getMarketOrders($args  = null) {
+      if(isSet($args["_market"]) && isSet($args["_currency"])) {
+        $args["market"] = $args["_currency"] . "-" . $args["_market"];
+      }
+      if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
+      $args["market"]=strtoupper(str_replace("-","_",$args["market"]));
+      $args["market"]=strtoupper(str_replace("/","_",$args["market"]));
+
+      $orderCount  = isSet($args["orderCount"]) ? "/" . $args["orderCount"] : "";
+
+      $response = $this->send("GetMarketOrders/".$args["market"].$orderCount, null , false);
       return $response;
     }
 
