@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class    BittrexxApi
   * @author     Fransjo Leihitu
-  * @version    0.7
+  * @version    0.8
   *
   * API Documentation : https://bittrex.com/home/api
   */
@@ -19,7 +19,7 @@
 
     // class version
     private $_version_major  = "0";
-    private $_version_minor  = "7";
+    private $_version_minor  = "8";
 
     public function __construct($apiKey = null , $apiSecret = null)
     {
@@ -114,8 +114,9 @@
         $args["market"] = $args["_market"] . "-" . $args["_currency"];
       }
       if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
-      if(!isSet($args["type"])) return $this->getErrorReturn("required parameter: type");
-      return $this->send("public/getmarketsummary" , $args , false);
+      if(!isSet($args["type"])) $args["type"] = "both";
+
+      return $this->send("public/getorderbook" , $args , false);
     }
 
     public function getMarketHistory($args = null) {
@@ -138,6 +139,12 @@
         $args["market"] = $args["_market"] . "-" . $args["_currency"];
       }
       if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
+
+      // temp fix
+      if(isSet($args["amount"])) {
+        $args["quantity"] = $args["amount"];
+      }
+
       if(!isSet($args["quantity"])) return $this->getErrorReturn("required parameter: quantity");
       if(!isSet($args["rate"])) return $this->getErrorReturn("required parameter: rate");
       return $this->send("market/buylimit" , $args);
@@ -148,7 +155,13 @@
         $args["market"] = $args["_market"] . "-" . $args["_currency"];
       }
       if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
+
+      // temp fix
+      if(isSet($args["amount"])) {
+        $args["quantity"] = $args["amount"];
+      }
       if(!isSet($args["quantity"])) return $this->getErrorReturn("required parameter: quantity");
+
       if(!isSet($args["rate"])) return $this->getErrorReturn("required parameter: rate");
       return $this->send("market/selllimit" , $args);
     }
