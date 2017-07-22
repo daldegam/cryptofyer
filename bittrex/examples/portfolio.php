@@ -187,11 +187,14 @@
             $color  = $profitSell>0 ? "background-color:green;color:white;" : "";
 
             echo "<tr style='" . $color   . "'>";
-            echo "<td><a href='holdings.php?c=" . $item["Currency"] . "&usd=". $btcUsdtRate . "' target='_blank' style=''>";
+            echo "<td>";
+            echo "<a href='holdings.php?c=" . $item["Currency"] . "&usd=". $btcUsdtRate . "' target='_blank' style=''>";
             if($profitSell > 0) echo "<strong>";
             echo $item["Currency"];
             if($profitSell > 0) echo "</strong>";
-            echo "</a></td>";
+            echo "</a>";
+            echo "&nbsp;<a href='" . $exchange->getCurrencyUrl(array("market" => "BTC-".$item["Currency"])) . "' target='_blank'>[bittrex]</a>";
+            echo "</td>";
 
             echo "<td>" . $item["Balance"] . "</td>";
             echo "<td>" . $last ."</td>";

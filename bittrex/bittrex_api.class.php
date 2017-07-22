@@ -4,17 +4,22 @@
   * @package    cryptofyer
   * @class    BittrexxApi
   * @author     Fransjo Leihitu
-  * @version    0.6
+  * @version    0.7
   *
   * API Documentation : https://bittrex.com/home/api
   */
-  class BittrexxApi extends CryptoExchange implements CryptoExchangeInterface{
+  class BittrexxApi extends CryptoExchange implements CryptoExchangeInterface {
 
+    // base exchange api url
     private $exchangeUrl  = "https://bittrex.com/api/";
     private $apiVersion   = "1.1";
 
+    // base url for currency
+    private $currencyUrl  = "https://www.bittrex.com/Market/Index?MarketName=";
+
+    // class version
     private $_version_major  = "0";
-    private $_version_minor  = "6";
+    private $_version_minor  = "7";
 
     public function __construct($apiKey = null , $apiSecret = null)
     {
@@ -74,6 +79,15 @@
 
     public function getCurrencies($args = null){
       return $this->send("public/getcurrencies" , $args , false);
+    }
+
+    public function getCurrencyUrl($args = null) {
+      if(isSet($args["_market"]) && isSet($args["_currency"])) {
+        $args["market"] = $args["_market"] . "-" . $args["_currency"];
+      }
+      if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
+
+      return $this->currencyUrl . $args["market"];
     }
 
     public function getTicker($args = null) {

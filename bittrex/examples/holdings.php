@@ -55,7 +55,7 @@
   }
 
 
-  echo "<h1>Holdings in  " . $currency . "</h1>";
+  echo "<h1>Holdings in  <a href='" . $exchange->getCurrencyUrl(array("market" => "BTC-" . $currency)) . "' target='_blank'>" . $currency ."</a></h1>";
   echo "1 BTC = " . $btcUsdtRate . " USD<br>";
   $historyBalance = 0;
   $historyUnits   = 0;
