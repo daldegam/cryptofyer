@@ -44,7 +44,7 @@ Market/currency pair
 When I started with this unified api platform, I used Bittrex's API as a model.
 Bittrex's string literal for the marketpair is [market]-[currency] for example : BTC-ETH.
 
-After Bittrex set out to implement Cryptopia's API. Cryptopia's string literal for the marketpair is [currency]-[market] for example : ETH-BTC.
+After Bittrex I implemented Cryptopia's API. Cryptopia's string literal for the marketpair is [currency]-[market] for example : ETH-BTC.
 
 In order to normalize the market literal string you can use the getMarketPair() function.
 
@@ -66,7 +66,7 @@ $market   = $exchange->getMarketPair($_market , $_currency);
 ```
 Here you see '$market' has the value 'BTC-USDT'.
 
-In the future, each exchange api class has a 'getMarketPair()' function to retrieve the right pair.
+In the future, each exchange api class has a 'getMarketPair()' function to retrieve the right pair notation.
 
 
 Todo
