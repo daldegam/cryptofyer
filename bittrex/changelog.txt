@@ -1,3 +1,6 @@
+v0.7
+- added currency url
+
 v0.6
 - Added alternative method to compose market/currency string
 - Using getErrorReturn
