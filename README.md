@@ -29,13 +29,15 @@ Each exchange sits in its own folder and there you'll find 'config.example.inc.p
 * Edit your key and secret in config.inc.php.
 
 
-Most common functions
+Required functions
 ----
+The exchange classes have some required functions to implement:
 * buy() -> place a buy order
 * sell() -> place a sell order
 * getOrders() -> get open orders
 * cancel() -> cancel order
 * getTicker() -> get currency information
+* getCurrencyUrl() -> get the exchange currency detail url
 
 Todo
 ----
