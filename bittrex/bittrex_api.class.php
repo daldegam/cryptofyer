@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class    BittrexxApi
   * @author     Fransjo Leihitu
-  * @version    0.8
+  * @version    0.9
   *
   * API Documentation : https://bittrex.com/home/api
   */
@@ -19,7 +19,7 @@
 
     // class version
     private $_version_major  = "0";
-    private $_version_minor  = "8";
+    private $_version_minor  = "9";
 
     public function __construct($apiKey = null , $apiSecret = null)
     {
@@ -83,7 +83,7 @@
 
     public function getCurrencyUrl($args = null) {
       if(isSet($args["_market"]) && isSet($args["_currency"])) {
-        $args["market"] = $args["_market"] . "-" . $args["_currency"];
+        $args["market"] = $this->getMarketPair($args["_market"],$args["_currency"]);
       }
       if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
 
@@ -92,7 +92,7 @@
 
     public function getTicker($args = null) {
       if(isSet($args["_market"]) && isSet($args["_currency"])) {
-        $args["market"] = $args["_market"] . "-" . $args["_currency"];
+        $args["market"] = $this->getMarketPair($args["_market"],$args["_currency"]);
       }
       if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
       return $this->send("public/getticker" , $args, false);
@@ -100,7 +100,7 @@
 
     public function getMarketSummary($args = null) {
       if(isSet($args["_market"]) && isSet($args["_currency"])) {
-        $args["market"] = $args["_market"] . "-" . $args["_currency"];
+        $args["market"] = $this->getMarketPair($args["_market"],$args["_currency"]);
       }
       if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
       return $this->send("public/getmarketsummary" , $args , false);
@@ -111,7 +111,7 @@
         optional : depth
       */
       if(isSet($args["_market"]) && isSet($args["_currency"])) {
-        $args["market"] = $args["_market"] . "-" . $args["_currency"];
+        $args["market"] = $this->getMarketPair($args["_market"],$args["_currency"]);
       }
       if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
       if(!isSet($args["type"])) $args["type"] = "both";
@@ -121,7 +121,7 @@
 
     public function getMarketHistory($args = null) {
       if(isSet($args["_market"]) && isSet($args["_currency"])) {
-        $args["market"] = $args["_market"] . "-" . $args["_currency"];
+        $args["market"] = $this->getMarketPair($args["_market"],$args["_currency"]);
       }
       if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
       return $this->send("public/getmarkethistory" , $args , false);
@@ -136,7 +136,7 @@
     /* ------ BEGIN market api methodes ------ */
     public function buy($args = null) {
       if(isSet($args["_market"]) && isSet($args["_currency"])) {
-        $args["market"] = $args["_market"] . "-" . $args["_currency"];
+        $args["market"] = $this->getMarketPair($args["_market"],$args["_currency"]);
       }
       if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
 
@@ -152,7 +152,7 @@
 
     public function sell($args = null) {
       if(isSet($args["_market"]) && isSet($args["_currency"])) {
-        $args["market"] = $args["_market"] . "-" . $args["_currency"];
+        $args["market"] = $this->getMarketPair($args["_market"],$args["_currency"]);
       }
       if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
 
@@ -173,7 +173,7 @@
 
     public function getOrders($args = null) {
       if(isSet($args["_market"]) && isSet($args["_currency"])) {
-        $args["market"] = $args["_market"] . "-" . $args["_currency"];
+        $args["market"] = $this->getMarketPair($args["_market"],$args["_currency"]);
       }
       return $this->send("market/getopenorders" , $args);
     }
@@ -217,7 +217,7 @@
 
     public function getOrderHistory($args = null) {
       if(isSet($args["_market"]) && isSet($args["_currency"])) {
-        $args["market"] = $args["_market"] . "-" . $args["_currency"];
+        $args["market"] = $this->getMarketPair($args["_market"],$args["_currency"]);
       }
       if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
       return $this->send("account/getorderhistory" , $args);

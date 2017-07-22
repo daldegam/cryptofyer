@@ -82,7 +82,7 @@
 
     public function getCurrencyUrl($args = null) {
       if(isSet($args["_market"]) && isSet($args["_currency"])) {
-        $args["market"] =  $args["_currency"] . "_" . $args["_market"];
+        $args["market"] = $this->getMarketPair($args["_market"],$args["_currency"]);
       }
       if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
 
