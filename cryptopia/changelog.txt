@@ -1,3 +1,6 @@
+v0.7
+- renamed getMarketOrders to getOrderbook
+
 v0.6
 - added getMarketOrders
 

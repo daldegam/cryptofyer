@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class CryptopiaApi
   * @author     Fransjo Leihitu
-  * @version    0.6
+  * @version    0.7
   *
   * Documentation Public Api : https://www.cryptopia.co.nz/Forum/Thread/255
   * Documentation Private Api : https://www.cryptopia.co.nz/Forum/Thread/256
@@ -19,7 +19,7 @@
 
     // class version
     private $_version_major  = "0";
-    private $_version_minor  = "6";
+    private $_version_minor  = "7";
 
     public function __construct($apiKey = null , $apiSecret = null)
     {
@@ -187,7 +187,7 @@
       return $response;
     }
 
-    public function getMarketOrders($args  = null) {
+    public function getOrderbook($args  = null) {
       if(isSet($args["_market"]) && isSet($args["_currency"])) {
         $args["market"] = $args["_currency"] . "-" . $args["_market"];
       }
