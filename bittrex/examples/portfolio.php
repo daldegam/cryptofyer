@@ -17,7 +17,7 @@
 
   $btcUsdtRate  = 0;
   if(!isSet($_GET["usd"])) {
-    $tickerOBJ = $exchange->getTicker(array("market" => "USDT-BTC"));
+    $tickerOBJ = $exchange->getTicker(array("_market" => "USDT" , "_currency" => "BTC"));
     if(!empty($tickerOBJ)) {
       if($tickerOBJ["success"] === true) {
         $btcUsdtRate  = number_format($tickerOBJ["result"]["Last"], 10, '.', '');
@@ -63,12 +63,12 @@
             $item["Available"]  = number_format($item["Available"], 10, '.', '');
 
             $currency = $item["Currency"];
-            $market   = "BTC-" . $currency;
+            $market   = $exchange->getMarketPair("BTC" , $currency);
 
             $bid  = 0;
             $ask  = 0;
             $last = 0;
-            $tickerOBJ = $exchange->getTicker(array("market" => $market));
+            $tickerOBJ = $exchange->getTicker(array("_market" => "BTC" , "_currency" => $currency));
             if($tickerOBJ) {
               if($tickerOBJ["success"] == true) {
                 $bid  = number_format($tickerOBJ["result"]["Bid"], 10, '.', '');
@@ -88,7 +88,7 @@
             $BtcBalance = 0;
             $BtcLoss = 0;
             $BtcGain = 0;
-            $historyOBJ = $exchange->getOrderHistory(array("market" => $market));
+            $historyOBJ = $exchange->getOrderHistory(array("_market" => "BTC" , "_currency" => $currency));
 
 
             $_history = array();
@@ -193,7 +193,7 @@
             echo $item["Currency"];
             if($profitSell > 0) echo "</strong>";
             echo "</a>";
-            echo "&nbsp;<a href='" . $exchange->getCurrencyUrl(array("market" => "BTC-".$item["Currency"])) . "' target='_blank'>[bittrex]</a>";
+            echo "&nbsp;<a href='" . $exchange->getCurrencyUrl(array("_market" => "BTC" , "_currency" => $item["Currency"])) . "' target='_blank'>[bittrex]</a>";
             echo "</td>";
 
             echo "<td>" . $item["Balance"] . "</td>";

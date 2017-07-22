@@ -15,11 +15,11 @@
 
   $currency = isSet($_GET["c"]) ? $_GET["c"] : null;
   if(empty($currency)) die("No currency");
-  $market   = "BTC-" . $currency;
+  $market   = $exchange->getMarketPair("BTC" , $currency);
 
   $btcUsdtRate  = 0;
   if(!isSet($_GET["usd"])) {
-    $tickerOBJ = $exchange->getTicker(array("market" => "USDT-BTC"));
+    $tickerOBJ = $exchange->getTicker(array("_market" => "USDT" , "_currency" => "BTC"));
     if(!empty($tickerOBJ)) {
       if($tickerOBJ["success"] === true) {
         $btcUsdtRate  = number_format($tickerOBJ["result"]["Last"], 10, '.', '');
@@ -45,7 +45,7 @@
   $bid  = 0;
   $ask  = 0;
   $last = 0;
-  $tickerOBJ = $exchange->getTicker(array("market" => $market));
+  $tickerOBJ = $exchange->getTicker(array("_market" => "BTC" , "_currency" => $currency));
   if($tickerOBJ) {
     if($tickerOBJ["success"] == true) {
       $bid  = number_format($tickerOBJ["result"]["Bid"], 10, '.', '');
@@ -65,7 +65,7 @@
   $BtcBalance = 0;
   $BtcLoss = 0;
   $BtcGain = 0;
-  $historyOBJ = $exchange->getOrderHistory(array("market" => $market));
+  $historyOBJ = $exchange->getOrderHistory(array("_market" => "BTC" , "_currency" => $currency));
 
 
   $_history = array();

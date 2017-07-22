@@ -18,7 +18,7 @@
 
   $btcUsdtRate  = 0;
   if(!isSet($_GET["usd"])) {
-    $tickerOBJ = $exchange->getTicker(array("market" => "USDT-BTC"));
+    $tickerOBJ = $exchange->getTicker(array("_market" => "USDT" , "_currency" => "BTC"));
     if(!empty($tickerOBJ)) {
       if($tickerOBJ["success"] === true) {
         $btcUsdtRate  = number_format($tickerOBJ["result"]["Last"], 10, '.', '');
