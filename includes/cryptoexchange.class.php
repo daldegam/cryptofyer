@@ -5,7 +5,7 @@
   * @package    cryptofyer
   * @class CryptoExchange
   * @author     Fransjo Leihitu
-  * @version    0.1
+  * @version    0.2
   *
   */
   class CryptoExchange {
@@ -16,7 +16,7 @@
     private $exchangeUrl   = null;
 
     private $version_major  = "0";
-    private $version_minor  = "0";
+    private $version_minor  = "2";
     private $version  = "";
 
     public function __construct($apiKey = null , $apiSecret = null)
@@ -29,6 +29,10 @@
       $this->version_major  = $major;
       $this->version_minor = $minor;
       $this->version  = $major . "." . $minor;
+    }
+
+    public function getMarketPair($market = "" , $currency = "") {
+      return strtoupper($market . "-" . $currency);
     }
 
     public function getVersion() {

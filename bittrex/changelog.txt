@@ -1,3 +1,9 @@
+v0.9
+- added getMarketPair() to resolve market - currency pair : <market>-<currency>
+
+v0.8
+- added temporary normalization fix for buy and sell
+
 v0.7
 - added currency url
 
