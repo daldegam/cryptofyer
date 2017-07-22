@@ -1,3 +1,9 @@
+CryptoExchangeInterface v0.3
+- added comments
+
+CryptoExchangeInterface v0.2
+- added getCurrencyUrl
+
 v0.1
 - It's alive
 - Added interface
