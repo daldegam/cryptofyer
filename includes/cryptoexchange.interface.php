@@ -14,6 +14,7 @@ interface CryptoExchangeInterface {
   public function buy($args = null);
   public function sell($args = null);
   public function getOrders($args = null) ;
-
+  public function getCurrencyUrl($args = null);
+  
 }
  ?>

@@ -4,17 +4,22 @@
   * @package    cryptofyer
   * @class CryptopiaApi
   * @author     Fransjo Leihitu
-  * @version    0.4
+  * @version    0.5
   *
   * Documentation Public Api : https://www.cryptopia.co.nz/Forum/Thread/255
   * Documentation Private Api : https://www.cryptopia.co.nz/Forum/Thread/256
   */
   class CryptopiaApi extends CryptoExchange implements CryptoExchangeInterface {
 
+    // exchange base api url
     private $exchangeUrl   = "https://www.cryptopia.co.nz/Api/";
 
+    // exchange currency url
+    private $currencyUrl  = "https://www.cryptopia.co.nz/Exchange?market=";
+
+    // class version
     private $_version_major  = "0";
-    private $_version_minor  = "4";
+    private $_version_minor  = "5";
 
     public function __construct($apiKey = null , $apiSecret = null)
     {
@@ -69,6 +74,15 @@
       } else {
         return $this->getErrorReturn($obj["Error"]);
       }
+    }
+
+    public function getCurrencyUrl($args = null) {
+      if(isSet($args["_market"]) && isSet($args["_currency"])) {
+        $args["market"] =  $args["_currency"] . "_" . $args["_market"];
+      }
+      if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
+
+      return $this->currencyUrl . $args["market"];
     }
 
     public function getCurrencies($args = null){
