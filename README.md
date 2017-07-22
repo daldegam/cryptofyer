@@ -39,6 +39,65 @@ The exchange classes have some required functions to implement:
 * getTicker() -> get currency information
 * getCurrencyUrl() -> get the exchange currency detail url
 
+Market/currency pair
+----
+When I started with this unified api platform, I used Bittrex's API as a model.
+Bittrex's string literal for the marketpair is [market]-[currency] for example : BTC-ETH.
+
+After Bittrex I implemented Cryptopia's API. Cryptopia's string literal for the marketpair is [currency]-[market] for example : ETH-BTC.
+
+In order to normalize the market literal string you can use the getMarketPair() function.
+
+```php
+$_market = "USDT";
+$_currency = "BTC";
+
+$exchange  = new BittrexxApi($apiKey , $apiSecret );
+$market   = $exchange->getMarketPair($_market , $_currency);
+```
+Here you see `$market` has the value 'USDT-BTC'.
+
+```php
+$_market = "USDT";
+$_currency = "BTC";
+
+$exchange  = new CryptopiaApi($apiKey , $apiSecret );
+$market   = $exchange->getMarketPair($_market , $_currency);
+```
+Here you see `$market` has the value 'BTC-USDT'.
+
+In the future, each exchange api class has a `getMarketPair()` function to retrieve the right pair notation.
+
+Unified market arguments
+----
+Some functions requires the market string literal as argument. For example Bittrex's ticker:
+
+```php
+$result = $exchange->getTicker(array("market" => "BTC-ETH"));
+debug($result);
+```
+
+or Cryptopia's ticker :
+
+```php
+$result = $exchange->getTicker(array("market" => "ETH-BTC"));
+debug($result);
+```
+
+As you can see, the `market` value is different. To normalize, I added 2 special arguments :
+
+* `_market`
+* `_currency`
+
+for example :
+
+```php
+$result = $exchange->getTicker(array("_market" => "BTC" , "_currency" => "ETH"));
+debug($result);
+```
+The function will resolve the market pair with the `getMarketPair()` function.
+
+
 Todo
 ----
 * More Exchanges Api

@@ -26,7 +26,7 @@
 
   $_defaultMarket   = "BTC";
   $_defaultCurrency = "ETH";
-  $defaultMarket    =  $_defaultCurrency . "-" . $_defaultMarket;
+  $defaultMarket    = $exchange->getMarketPair($_defaultMarket,$_defaultCurrency);
   $market           = "";
 
   // parse CLI args
@@ -38,7 +38,7 @@
   $_currency  = isSet($args["currency"]) ? $args["currency"] : "";
 
   if(!empty($_market) && !empty($_currency)) {
-    $market =  $_currency . "-" . $_market;
+    $market =  $exchange->getMarketPair($_market,$_currency);
   }
 
   if(empty($market)) {
@@ -52,7 +52,7 @@
     $_currency = trim(preg_replace('/\s+/', '', $_currency));
     $_currency  = empty($_currency) ? $_defaultCurrency : $_currency;
 
-    $market = $_currency . "-" . $_market;
+    $market = $exchange->getMarketPair($_market,$_currency);
   }
 
   $market = trim(preg_replace('/\s+/', '', $market));
