@@ -1,3 +1,7 @@
+v0.10
+- added extra check in send() to see if the json string can be converted to assoc array
+- code cleanup
+
 v0.9
 - added getMarketPair() to resolve market - currency pair : <market>-<currency>
 

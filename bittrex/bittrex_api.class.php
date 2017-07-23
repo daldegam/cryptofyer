@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class    BittrexxApi
   * @author     Fransjo Leihitu
-  * @version    0.9
+  * @version    0.10
   *
   * API Documentation : https://bittrex.com/home/api
   */
@@ -19,7 +19,7 @@
 
     // class version
     private $_version_major  = "0";
-    private $_version_minor  = "9";
+    private $_version_minor  = "10";
 
     public function __construct($apiKey = null , $apiSecret = null)
     {
@@ -57,17 +57,18 @@
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
       $execResult = curl_exec($ch);
 
-      if(curl_error($ch))
-      {
-          return $this->getErrorReturn(curl_error($ch));
-      }
+      // check if there's a curl error
+      if(curl_error($ch)) return $this->getErrorReturn(curl_error($ch));
 
-      $obj = json_decode($execResult , true);
-
-      if($obj["success"] == true) {
-        return $this->getReturn($obj["success"],$obj["message"],$obj["result"]);
+      // try to convert json repsonse to assoc array
+      if($obj = json_decode($execResult , true)) {
+        if($obj["success"] == true) {
+          return $this->getReturn($obj["success"],$obj["message"],$obj["result"]);
+        } else {
+          return $this->getErrorReturn($obj["message"]);
+        }
       } else {
-        return $this->getErrorReturn($obj["message"]);
+          return $this->getErrorReturn($execResult);
       }
 
     }
@@ -140,12 +141,10 @@
       }
       if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
 
-      // temp fix
-      if(isSet($args["amount"])) {
-        $args["quantity"] = $args["amount"];
-      }
+      if(!isSet($args["amount"])) return $this->getErrorReturn("required parameter: amount");
+      $args["quantity"] = $args["amount"];
+      unset($args["amount"]);
 
-      if(!isSet($args["quantity"])) return $this->getErrorReturn("required parameter: quantity");
       if(!isSet($args["rate"])) return $this->getErrorReturn("required parameter: rate");
       return $this->send("market/buylimit" , $args);
     }
@@ -156,11 +155,9 @@
       }
       if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
 
-      // temp fix
-      if(isSet($args["amount"])) {
-        $args["quantity"] = $args["amount"];
-      }
-      if(!isSet($args["quantity"])) return $this->getErrorReturn("required parameter: quantity");
+      if(!isSet($args["amount"])) return $this->getErrorReturn("required parameter: amount");
+      $args["quantity"] = $args["amount"];
+      unset($args["amount"]);
 
       if(!isSet($args["rate"])) return $this->getErrorReturn("required parameter: rate");
       return $this->send("market/selllimit" , $args);
@@ -199,12 +196,11 @@
 
 
     public function withdraw($args = null) {
-      /*
-        optional : address
-      */
+      if(!isSet($args["amount"])) return $this->getErrorReturn("required parameter: amount");
+      $args["quantity"] = $args["amount"];
+      unset($args["amount"]);
 
       if(!isSet($args["currency"])) return $this->getErrorReturn("required parameter: currency");
-      if(!isSet($args["quantity"])) return $this->getErrorReturn("required parameter: quantity");
       if(!isSet($args["address"])) return $this->getErrorReturn("required parameter: address");
 
       return $this->send("account/withdraw" , $args);

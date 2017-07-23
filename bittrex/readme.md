@@ -1,4 +1,4 @@
-CryptoFyer Bittrex v0.9
+CryptoFyer Bittrex v0.10
 ==============
 
 PHP client api for Bittrex api v1.1
