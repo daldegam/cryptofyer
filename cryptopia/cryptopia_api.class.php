@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class CryptopiaApi
   * @author     Fransjo Leihitu
-  * @version    0.9
+  * @version    0.10
   *
   * Documentation Public Api : https://www.cryptopia.co.nz/Forum/Thread/255
   * Documentation Private Api : https://www.cryptopia.co.nz/Forum/Thread/256
@@ -19,7 +19,7 @@
 
     // class version
     private $_version_major  = "0";
-    private $_version_minor  = "9";
+    private $_version_minor  = "10";
 
     public function __construct($apiKey = null , $apiSecret = null)
     {
@@ -230,6 +230,15 @@
 
       $response = $this->send("GetMarketOrders/".$args["market"].$orderCount, null , false);
       return $response;
+    }
+
+    public function getMarketHistory($args = null) {
+      if(isSet($args["_market"]) && isSet($args["_currency"])) {
+        $args["market"] = $this->getMarketPair($args["_market"],$args["_currency"]);
+      }
+      if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
+
+      return $this->getErrorReturn("not implemented yet");
     }
 
   }

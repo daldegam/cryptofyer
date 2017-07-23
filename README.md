@@ -97,6 +97,9 @@ debug($result);
 ```
 The function will resolve the market pair with the `getMarketPair()` function.
 
+Unified tests
+----
+In the `tests` folder you will find some examples where you can see the normalization of functions.  
 
 Todo
 ----

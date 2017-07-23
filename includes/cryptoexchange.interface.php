@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class CryptoExchangeInterface
   * @author     Fransjo Leihitu
-  * @version    0.3
+  * @version    0.4
   *
   */
   interface CryptoExchangeInterface {
@@ -26,5 +26,8 @@
 
     // Get the exchange currency detail url
     public function getCurrencyUrl($args = null);
+
+    // Get market history
+    public function getMarketHistory($args = null);
   }
 ?>

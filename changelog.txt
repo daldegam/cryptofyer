@@ -1,3 +1,6 @@
+CryptoExchangeInterface v0.4
+- Added getMarketHistory()
+
 CryptoExchange v0.2
 - added getMarketPair() to resolve market - currency pair
 
