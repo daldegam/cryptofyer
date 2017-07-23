@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class CryptopiaApi
   * @author     Fransjo Leihitu
-  * @version    0.10
+  * @version    0.11
   *
   * Documentation Public Api : https://www.cryptopia.co.nz/Forum/Thread/255
   * Documentation Private Api : https://www.cryptopia.co.nz/Forum/Thread/256
@@ -19,7 +19,7 @@
 
     // class version
     private $_version_major  = "0";
-    private $_version_minor  = "10";
+    private $_version_minor  = "11";
 
     public function __construct($apiKey = null , $apiSecret = null)
     {
@@ -87,6 +87,8 @@
         $args["market"] = $this->getMarketPair($args["_market"],$args["_currency"]);
       }
       if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
+      $args["market"] = str_replace("-" , "_" , $args["market"]);
+      $args["market"] = str_replace("/" , "_" , $args["market"]);
 
       return $this->currencyUrl . $args["market"];
     }

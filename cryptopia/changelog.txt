@@ -1,3 +1,9 @@
+v0.11
+- fixed bug getCurrencyUrl() returning incorrect url
+
+v0.10
+- added getMarketHistory()
+
 v0.9
 - some code cleanup
 - new code for getTradeHistory()
