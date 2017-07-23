@@ -2,6 +2,9 @@
   /*
     Edit your key and secret here
   */
-  $apiKey    = "";
-  $apiSecret = "";
+  if(!isset($config)) $config = array();
+  $config["bittrex"] = array(
+    "apiKey" => "",
+    "apiSecret" => ""
+  );
 ?>

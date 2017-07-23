@@ -8,10 +8,12 @@
 
   include("../config.inc.php");
 
-  if(!isSet($apiKey)) die("please configure the apiKey");
-  if(!isSet($apiSecret)) die("please configure the apiSecret");
+  $exchangeName = "bittrex";
+  if(!isSet($config) || !isSet($config[$exchangeName])) die("no config for ". $exchangeName ." found!");
+  if(!isSet($config[$exchangeName]["apiKey"])) die("please configure the apiKey");
+  if(!isSet($config[$exchangeName]["apiSecret"])) die("please configure the apiSecret");
 
-  $exchange  = new BittrexxApi($apiKey , $apiSecret );
+  $exchange  = new BittrexxApi($config[$exchangeName]["apiKey"] , $config[$exchangeName]["apiSecret"] );
 
   $currency = isSet($_GET["c"]) ? $_GET["c"] : null;
   if(empty($currency)) die("No currency");

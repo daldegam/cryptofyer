@@ -17,10 +17,13 @@
   if(!file_exists("../../includes/tools.inc.php")) die("cannot find ../../includes/tools.inc.php");
   include("../../includes/tools.inc.php");
 
-  if(!isSet($apiKey)) die("please configure the apiKey");
-  if(!isSet($apiSecret)) die("please configure the apiSecret");
+  $exchangeName = "bittrex";
+  if(!isSet($config) || !isSet($config[$exchangeName])) die("no config for ". $exchangeName ." found!");
+  if(!isSet($config[$exchangeName]["apiKey"])) die("please configure the apiKey");
+  if(!isSet($config[$exchangeName]["apiSecret"])) die("please configure the apiSecret");
 
-  $exchange  = new BittrexxApi($apiKey , $apiSecret );
+  $exchange  = new BittrexxApi($config[$exchangeName]["apiKey"] , $config[$exchangeName]["apiSecret"] );
+
 
   cls(); // clear screen
 
