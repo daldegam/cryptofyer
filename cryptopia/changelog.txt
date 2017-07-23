@@ -1,3 +1,8 @@
+v0.9
+- some code cleanup
+- new code for getTradeHistory()
+- extra check in send() to check that the response string can be converted to assoc array
+
 v0.8
 - added getMarketPair() to resolve market - currency pair : <currency>-<market>
 
