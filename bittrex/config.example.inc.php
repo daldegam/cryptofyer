@@ -4,7 +4,7 @@
   */
   if(!isset($config)) $config = array();
   $config["bittrex"] = array(
-    "apiKey" => "",
-    "apiSecret" => ""
+    "apiKey"    => "XXXXXXXXXXXXXXXXXX",
+    "apiSecret" => "XXXXXXXXXXXXXXXXXX"
   );
 ?>
