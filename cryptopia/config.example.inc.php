@@ -4,7 +4,7 @@
   */
   if(!isset($config)) $config = array();
   $config["cryptopia"] = array(
-    "apiKey" => "",
-    "apiSecret" => ""
+    "apiKey" => "XXXXXXXXXXXXXXX",
+    "apiSecret" => "XXXXXXXXXXXXXXX"
   );
 ?>

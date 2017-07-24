@@ -11,7 +11,22 @@ Want to help me? You can tip me :)
 Supported Exchanges
 ----
 * Bittrex (https://www.bittrex.com/)
+Official API documentation: https://bittrex.com/home/api
+
 * Cryptopia (https://www.cryptopia.co.nz/)
+Official Public API documentation: https://www.cryptopia.co.nz/Forum/Thread/255
+Official Private API documentation: https://www.cryptopia.co.nz/Forum/Thread/256
+
+API keys safety
+----
+All the exchanges uses API keys. Each API key consists of a public and a private key. NEVER and I repeat NEVER expose your api keys to anybody! If somebody has your API keys, this person can sell/buy/withdraw from you account!
+
+If you do suspect somebody has your api keys DELETE your api keys at once!!!
+
+Also, a lot of exchanges have the option to make you api keys more secure with the option to sell/buy/withdra option. So if you can have an api key with only read rights and no sell/buy/withdraw right. But that depends on the exchange.
+
+One more time: NEVER EXPOSE YOUR API KEYS TO ANYBODY!!!!
+
 
 Installation
 ----
