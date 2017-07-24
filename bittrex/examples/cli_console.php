@@ -96,7 +96,7 @@
       // place sell order
       case "s" : {
         fwrite(STDOUT, "[$market] Place sell order\n");
-        fwrite(STDOUT, "Ammount : ");
+        fwrite(STDOUT, "amount : ");
         $units = strtoupper(fgets(STDIN));
         if(!empty($units) && trim($units) != "") {
           $units  = number_format($units, 10, '.', '');
@@ -107,7 +107,7 @@
               $totalValue = $units * $rate;
               $totalValue  = number_format($totalValue, 10, '.', '');
               fwrite(STDOUT, "Total value: $totalValue\n");
-              if($sellOBJ = $exchange->sell(array("market" => $market,"ammount"=>$units,"rate"=>$rate))) {
+              if($sellOBJ = $exchange->sell(array("market" => $market,"amount"=>$units,"rate"=>$rate))) {
                 if($sellOBJ["success"] == true) {
                   fwrite(STDOUT, "[$market] Placed sell order: $units units at rate $rate ($totalValue)\n");
                   fwrite(STDOUT, "[$market] Returning to main menu\n");
@@ -137,7 +137,7 @@
       // place buy order
       case "b" : {
         fwrite(STDOUT, "[$market] Place buy order\n");
-        fwrite(STDOUT, "Ammount : ");
+        fwrite(STDOUT, "amount : ");
         $units = strtoupper(fgets(STDIN));
         if(!empty($units) && trim($units) != "") {
           $units  = number_format($units, 10, '.', '');
@@ -149,7 +149,7 @@
               $totalValue = $units * $rate;
               $totalValue  = number_format($totalValue, 10, '.', '');
               fwrite(STDOUT, "Total value $totalValue\n");
-              if($sellOBJ = $exchange->buy(array("market" => $market,"ammount"=>$units,"rate"=>$rate))) {
+              if($sellOBJ = $exchange->buy(array("market" => $market,"amount"=>$units,"rate"=>$rate))) {
                 if($sellOBJ["success"] == true) {
                   fwrite(STDOUT, "[$market] Placed buy order: $units units at rate $rate ($totalValue)\n");
                   fwrite(STDOUT, "[$market] Returning to main menu\n");
@@ -209,11 +209,11 @@
                 if($selectOrder <= 0) {
                   if($selectOrder == -1) {
                     foreach($ordersOBJ["result"] as $item) {
-                      $cancelOrderOBJ = $exchange->cancel(array("uuid" => $item["OrderUuid"]));
+                      $cancelOrderOBJ = $exchange->cancel(array("orderid" => $item["orderid"]));
                       if(!empty($cancelOrderOBJ)) {
                         if($cancelOrderOBJ["success"] == true) {
                           $orderType    = $item["OrderType"];
-                          $OrderUuid    = $item['OrderUuid'];
+                          $OrderUuid    = $item['orderid'];
                           $Quantity     = $item['Quantity'];
                           $PricePerUnit = $item['Limit'];
                           $QuantityRemaining  = $item['QuantityRemaining'];
@@ -232,7 +232,7 @@
                   }
                 } else {
                   $order  = $ordersOBJ["result"][$selectOrder-1];
-                  $cancelOrderOBJ = $exchange->cancel(array("uuid" => $order["OrderUuid"]));
+                  $cancelOrderOBJ = $exchange->cancel(array("orderid" => $order["orderid"]));
                   if(!empty($cancelOrderOBJ)) {
                     if($cancelOrderOBJ["success"] == true) {
                       $item         = $order;
@@ -299,7 +299,7 @@
             $PricePerUnit = $item['Limit'];
             $QuantityRemaining  = $item['QuantityRemaining'];
 
-            fwrite(STDOUT, "$orderType $QuantityRemaining/$Quantity $PricePerUnit $OrderUuid \n");
+            fwrite(STDOUT, "* $orderType $QuantityRemaining/$Quantity $PricePerUnit $OrderUuid \n");
           }
         } else {
           fwrite(STDOUT, "[$market] You have no open orders, going back to main menu!\n");

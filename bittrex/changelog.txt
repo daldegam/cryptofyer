@@ -1,3 +1,7 @@
+v0.11
+- uniform orderid
+- cleanup code
+
 v0.10
 - added extra check in send() to see if the json string can be converted to assoc array
 - code cleanup

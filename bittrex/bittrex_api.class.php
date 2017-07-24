@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class    BittrexxApi
   * @author     Fransjo Leihitu
-  * @version    0.10
+  * @version    0.11
   *
   * API Documentation : https://bittrex.com/home/api
   */
@@ -19,7 +19,7 @@
 
     // class version
     private $_version_major  = "0";
-    private $_version_minor  = "10";
+    private $_version_minor  = "11";
 
     public function __construct($apiKey = null , $apiSecret = null)
     {
@@ -146,7 +146,21 @@
       unset($args["amount"]);
 
       if(!isSet($args["rate"])) return $this->getErrorReturn("required parameter: rate");
-      return $this->send("market/buylimit" , $args);
+
+      if($result = $this->send("market/buylimit" , $args)) {
+        if($result["success"] == true) {
+          $order  = $result["result"];
+          if(isSet($order["uuid"])) {
+            $order["orderid"] = $order["uuid"];
+          }
+          $result["result"] = $order;
+          return $result;
+        } else {
+          return $result;
+        }
+      } else {
+        $this->getErrorReturn("api error");
+      }
     }
 
     public function sell($args = null) {
@@ -160,11 +174,26 @@
       unset($args["amount"]);
 
       if(!isSet($args["rate"])) return $this->getErrorReturn("required parameter: rate");
-      return $this->send("market/selllimit" , $args);
+      if($result = $this->send("market/selllimit" , $args)) {
+        if($result["success"] == true) {
+          $order  = $result["result"];
+          if(isSet($order["uuid"])) {
+            $order["orderid"] = $order["uuid"];
+          }
+          $result["result"] = $order;
+          return $result;
+        } else {
+          return $result;
+        }
+      } else {
+        $this->getErrorReturn("api error");
+      }
     }
 
     public function cancel($args = null) {
-      if(!isSet($args["uuid"])) return $this->getErrorReturn("required parameter: uuid");
+      if(!isSet($args["orderid"])) return $this->getErrorReturn("required parameter: orderid");
+      $args["uuid"] = $args["orderid"];
+      unset($args["orderid"]);
       return $this->send("market/cancel" , $args);
     }
 
@@ -172,7 +201,19 @@
       if(isSet($args["_market"]) && isSet($args["_currency"])) {
         $args["market"] = $this->getMarketPair($args["_market"],$args["_currency"]);
       }
-      return $this->send("market/getopenorders" , $args);
+      $result = $this->send("market/getopenorders" , $args);
+      if($result["success"] == true) {
+        $items  = $result["result"];
+        $newItems = array();
+        foreach($items as $item) {
+          $item['orderid']  = $item['OrderUuid'];
+          $newItems[] = $item;
+        }
+        $result["result"] = $newItems;
+        return $result;
+      } else {
+        $this->getErrorReturn("API error");
+      }
     }
     /* ------ END market api methodes ------ */
 
@@ -207,7 +248,9 @@
     }
 
     public function getOrder($args = null) {
-      if(!isSet($args["uuid"])) return $this->getErrorReturn("required parameter: uuid");
+      if(!isSet($args["orderid"])) return $this->getErrorReturn("required parameter: orderid");
+      $args["uuid"] = $args["orderid"];
+      unset($args["orderid"]);
       return $this->send("account/getorder" , $args);
     }
 
