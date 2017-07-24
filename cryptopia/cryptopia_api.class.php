@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class CryptopiaApi
   * @author     Fransjo Leihitu
-  * @version    0.12
+  * @version    0.13
   *
   * Documentation Public Api : https://www.cryptopia.co.nz/Forum/Thread/255
   * Documentation Private Api : https://www.cryptopia.co.nz/Forum/Thread/256
@@ -19,7 +19,7 @@
 
     // class version
     private $_version_major  = "0";
-    private $_version_minor  = "12";
+    private $_version_minor  = "13";
 
     public function __construct($apiKey = null , $apiSecret = null)
     {
@@ -39,7 +39,7 @@
       $ch = curl_init();
 
       if($secure) {
-        $nonce                      = time();
+        $nonce                      = microtime();
         $post_data                  = json_encode( $urlParams );
         $m                          = md5( $post_data, true );
         $requestContentBase64String = base64_encode( $m );
@@ -122,6 +122,10 @@
     }
 
     public function cancel($args = null) {
+      if(!isSet($args["orderid"])) return $this->getErrorReturn("required parameter: orderid");
+      $args["OrderId"]  = $args["orderid"];
+      unset($args["orderid"]);
+
       if(!isSet($args["type"])) return $this->getErrorReturn("required parameter: type");
       $args["Type"] = $args["type"];
       unset($args["type"]);

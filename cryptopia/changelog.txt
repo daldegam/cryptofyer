@@ -1,3 +1,7 @@
+v0.13
+- first start with orderid
+- changed time() to microtime() for nonce
+
 v0.12
 - code updates
 - alias functions
