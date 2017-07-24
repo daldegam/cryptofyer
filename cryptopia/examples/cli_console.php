@@ -101,15 +101,15 @@
         fwrite(STDOUT, "Ammount : ");
         $units = strtoupper(fgets(STDIN));
         if(!empty($units) && trim($units) != "") {
-          $units  = number_format($units, 10, '.', '');
+          $units  = number_format($units, 8, '.', '');
           fwrite(STDOUT, "$units\n");
           fwrite(STDOUT, "Rate : ");
           $rate = strtoupper(fgets(STDIN));
           if(!empty($rate) && trim($rate) != "") {
-              $rate  = number_format($rate, 10, '.', '');
+              $rate  = number_format($rate, 8, '.', '');
               fwrite(STDOUT, "$rate\n");
               $totalValue = $units * $rate;
-              $totalValue  = number_format($totalValue, 10, '.', '');
+              $totalValue  = number_format($totalValue, 8, '.', '');
               fwrite(STDOUT, "Total value : $totalValue\n");
               if($sellOBJ = $exchange->sell(array("market" => $market,"amount"=>$units,"rate"=>$rate))) {
                 if($sellOBJ["success"] == true) {
@@ -144,15 +144,15 @@
         fwrite(STDOUT, "Ammount : ");
         $units = strtoupper(fgets(STDIN));
         if(!empty($units) && trim($units) != "") {
-          $units  = number_format($units, 10, '.', '');
+          $units  = number_format($units, 8, '.', '');
           fwrite(STDOUT, "$units\n");
           fwrite(STDOUT, "Rate : ");
           $rate = strtoupper(fgets(STDIN));
           if(!empty($rate) && trim($rate) != "") {
-              $rate  = number_format($rate, 10, '.', '');
+              $rate  = number_format($rate, 8, '.', '');
               fwrite(STDOUT, "$rate\n");
               $totalValue = $units * $rate;
-              $totalValue  = number_format($totalValue, 10, '.', '');
+              $totalValue  = number_format($totalValue, 8, '.', '');
               fwrite(STDOUT, "Total : $totalValue\n");
               if($sellOBJ = $exchange->buy(array("market" => $market,"amount"=>$units,"rate"=>$rate))) {
                 if($sellOBJ["success"] == true) {
@@ -202,7 +202,7 @@
                 $orderType    = $item["Type"];
                 $OrderUuid    = $item['OrderId'];
                 $Quantity     = $item['Amount'];
-                $PricePerUnit = number_format($item['Rate'], 10, '.', '');
+                $PricePerUnit = number_format($item['Rate'], 8, '.', '');
                 $QuantityRemaining  = $item['Remaining'];
 
                 fwrite(STDOUT, "[$counter] $orderType $QuantityRemaining/$Quantity $PricePerUnit $OrderUuid \n");
@@ -221,7 +221,7 @@
                           $orderType    = $item["Type"];
                           $OrderUuid    = $item['OrderId'];
                           $Quantity     = $item['Amount'];
-                          $PricePerUnit = number_format($item['Rate'], 10, '.', '');
+                          $PricePerUnit = number_format($item['Rate'], 8, '.', '');
                           $QuantityRemaining  = $item['Remaining'];
                           fwrite(STDOUT, "[ORDER CANCELED] $orderType $QuantityRemaining/$Quantity $PricePerUnit $OrderUuid \n");
                         } else {
@@ -245,7 +245,7 @@
                       $orderType    = $item["Type"];
                       $OrderUuid    = $item['OrderId'];
                       $Quantity     = $item['Amount'];
-                      $PricePerUnit = number_format($item['Rate'], 10, '.', '');
+                      $PricePerUnit = number_format($item['Rate'], 8, '.', '');
                       $QuantityRemaining  = $item['Remaining'];
                       fwrite(STDOUT, "[ORDER CANCELED] $orderType $QuantityRemaining/$Quantity $PricePerUnit $OrderUuid \n");
                       fwrite(STDOUT, "\n[$market] Returning to main menu\n");
@@ -303,8 +303,8 @@
             $orderType    = $item["Type"];
             $OrderUuid    = $item['OrderId'];
             $Quantity     = $item['Amount'];
-            $PricePerUnit = number_format($item['Rate'], 10, '.', '');
-            $totalValue = number_format($PricePerUnit *$Quantity, 10, '.', '');
+            $PricePerUnit = number_format($item['Rate'], 8, '.', '');
+            $totalValue = number_format($PricePerUnit *$Quantity, 8, '.', '');
             $QuantityRemaining  = $item['Remaining'];
 
             fwrite(STDOUT, "$orderType $QuantityRemaining/$Quantity $PricePerUnit ($totalValue) [$OrderUuid] \n");
@@ -326,9 +326,9 @@
     $tickerOBJ  = $exchange->getTicker(array("market" => $market));
     if(!empty($tickerOBJ)) {
       if($tickerOBJ["success"]  == true) {
-        $last = number_format($tickerOBJ["result"]["Last"], 10, '.', '');
-        $bid = number_format($tickerOBJ["result"]["Bid"], 10, '.', '');
-        $ask = number_format($tickerOBJ["result"]["Ask"], 10, '.', '');
+        $last = number_format($tickerOBJ["result"]["Last"], 8, '.', '');
+        $bid = number_format($tickerOBJ["result"]["Bid"], 8, '.', '');
+        $ask = number_format($tickerOBJ["result"]["Ask"], 8, '.', '');
         fwrite(STDOUT, "Last = $last\n");
         fwrite(STDOUT, "Bid = $bid\n");
         fwrite(STDOUT, "Ask = $ask\n");

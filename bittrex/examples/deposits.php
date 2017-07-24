@@ -23,7 +23,7 @@
     $tickerOBJ = $exchange->getTicker(array("_market" => "USDT" , "_currency" => "BTC"));
     if(!empty($tickerOBJ)) {
       if($tickerOBJ["success"] === true) {
-        $btcUsdtRate  = number_format($tickerOBJ["result"]["Last"], 10, '.', '');
+        $btcUsdtRate  = number_format($tickerOBJ["result"]["Last"], 8, '.', '');
       }
     }
   } else {
@@ -49,10 +49,10 @@
       echo "</tr>";
 
       foreach($deposits as $deposit) {
-        $ammount  = number_format($deposit["Amount"], 10, '.', '');
+        $ammount  = number_format($deposit["Amount"], 8, '.', '');
         echo "<tr>";
         echo "<td>"  . $deposit["Currency"] . "</td>";
-        echo "<td>"  . $ammount . " " . $deposit["Currency"] . " / " . round(number_format($ammount*$btcUsdtRate, 10, '.', ''),2) . " USD</td>";
+        echo "<td>"  . $ammount . " " . $deposit["Currency"] . " / " . round(number_format($ammount*$btcUsdtRate, 8, '.', ''),2) . " USD</td>";
         echo "</tr>";
 
         $totalDepositBtc  += $ammount;
@@ -60,7 +60,7 @@
 
       echo "</table>";
       echo "<br>";
-      echo "Total : <strong>" . $totalDepositBtc . " BTC / " . round(number_format($totalDepositBtc*$btcUsdtRate, 10, '.', ''),2) . " USD</strong><br>";
+      echo "Total : <strong>" . $totalDepositBtc . " BTC / " . round(number_format($totalDepositBtc*$btcUsdtRate, 8, '.', ''),2) . " USD</strong><br>";
     }
   }
 

@@ -99,13 +99,13 @@
         fwrite(STDOUT, "amount : ");
         $units = strtoupper(fgets(STDIN));
         if(!empty($units) && trim($units) != "") {
-          $units  = number_format($units, 10, '.', '');
+          $units  = number_format($units, 8, '.', '');
           fwrite(STDOUT, "Rate : ");
           $rate = strtoupper(fgets(STDIN));
           if(!empty($rate) && trim($rate) != "") {
-              $rate  = number_format($rate, 10, '.', '');
+              $rate  = number_format($rate, 8, '.', '');
               $totalValue = $units * $rate;
-              $totalValue  = number_format($totalValue, 10, '.', '');
+              $totalValue  = number_format($totalValue, 8, '.', '');
               fwrite(STDOUT, "Total value: $totalValue\n");
               if($sellOBJ = $exchange->sell(array("market" => $market,"amount"=>$units,"rate"=>$rate))) {
                 if($sellOBJ["success"] == true) {
@@ -140,14 +140,14 @@
         fwrite(STDOUT, "amount : ");
         $units = strtoupper(fgets(STDIN));
         if(!empty($units) && trim($units) != "") {
-          $units  = number_format($units, 10, '.', '');
+          $units  = number_format($units, 8, '.', '');
           fwrite(STDOUT, "$units\n");
           fwrite(STDOUT, "Rate : ");
           $rate = strtoupper(fgets(STDIN));
           if(!empty($rate) && trim($rate) != "") {
-              $rate  = number_format($rate, 10, '.', '');
+              $rate  = number_format($rate, 8, '.', '');
               $totalValue = $units * $rate;
-              $totalValue  = number_format($totalValue, 10, '.', '');
+              $totalValue  = number_format($totalValue, 8, '.', '');
               fwrite(STDOUT, "Total value $totalValue\n");
               if($sellOBJ = $exchange->buy(array("market" => $market,"amount"=>$units,"rate"=>$rate))) {
                 if($sellOBJ["success"] == true) {
@@ -318,9 +318,9 @@
     $tickerOBJ  = $exchange->getTicker(array("market" => $market));
     if(!empty($tickerOBJ)) {
       if($tickerOBJ["success"]  == true) {
-        $last = number_format($tickerOBJ["result"]["Last"], 10, '.', '');
-        $bid = number_format($tickerOBJ["result"]["Bid"], 10, '.', '');
-        $ask = number_format($tickerOBJ["result"]["Ask"], 10, '.', '');
+        $last = number_format($tickerOBJ["result"]["Last"], 8, '.', '');
+        $bid = number_format($tickerOBJ["result"]["Bid"], 8, '.', '');
+        $ask = number_format($tickerOBJ["result"]["Ask"], 8, '.', '');
         fwrite(STDOUT, "Last = $last\n");
         fwrite(STDOUT, "Bid = $bid\n");
         fwrite(STDOUT, "Ask = $ask\n");

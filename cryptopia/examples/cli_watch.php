@@ -44,7 +44,7 @@
     $tickerOBJ  = $exchange->getTicker(array("market" => $market));
     if(!empty($tickerOBJ)) {
       if($tickerOBJ["success"]  == true) {
-        $last = number_format($tickerOBJ["result"]["Last"], 10, '.', '');
+        $last = number_format($tickerOBJ["result"]["Last"], 8, '.', '');
         $time = time();
         if($prevLast != $last) {
           $direction  = $last > $prevLast ? "+" : "-";
