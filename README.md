@@ -53,6 +53,8 @@ The exchange classes have some required functions to implement:
 * cancel() -> cancel order
 * getTicker() -> get currency information
 * getCurrencyUrl() -> get the exchange currency detail url
+* getMarketHistory() -> get market history
+* getBalance() -> get balance
 
 Market/currency pair
 ----
