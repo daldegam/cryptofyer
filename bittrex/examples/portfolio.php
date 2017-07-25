@@ -69,7 +69,7 @@
 
             $bid  = 0;
             $ask  = 0;
-            $last = 0;
+            $last = 1;
             $tickerOBJ = $exchange->getTicker(array("_market" => "BTC" , "_currency" => $currency));
             if($tickerOBJ) {
               if($tickerOBJ["success"] == true) {
@@ -90,8 +90,9 @@
             $BtcBalance = 0;
             $BtcLoss = 0;
             $BtcGain = 0;
-            $historyOBJ = $exchange->getOrderHistory(array("_market" => "BTC" , "_currency" => $currency));
 
+            $_market  = "BTC";
+            $historyOBJ = $exchange->getOrderHistory(array("_market" => $_market , "_currency" => $currency));
 
             $_history = array();
             if($historyOBJ) {
@@ -158,12 +159,20 @@
                   $_history[$timestamp] = $history;
 
                 }
+              } else {
+                $totalUnitsFilled = $item["Balance"];
               }
             }
 
-            $bidEstSellFormatted = number_format($totalUnitsFilled * $bid, 8, '.', '');
-            $askEstSellFormatted = number_format($totalUnitsFilled * $ask, 8, '.', '');
-            $lastEstSellFormatted = number_format($totalUnitsFilled * $last, 8, '.', '');
+            if($currency == "USDT") {
+              $bidEstSellFormatted = number_format($totalUnitsFilled * $bid, 8, '.', '');
+              $askEstSellFormatted = number_format($totalUnitsFilled * $ask, 8, '.', '');
+              $lastEstSellFormatted = number_format($totalUnitsFilled / $btcUsdtRate , 8, '.', '');
+            } else {
+              $bidEstSellFormatted = number_format($totalUnitsFilled * $bid, 8, '.', '');
+              $askEstSellFormatted = number_format($totalUnitsFilled * $ask, 8, '.', '');
+              $lastEstSellFormatted = number_format($totalUnitsFilled * $last, 8, '.', '');
+            }
 
 
             $BtcBalanceFormatted = number_format($BtcBalance, 8, '.', '');
@@ -189,6 +198,8 @@
             $color  = $profitSell>0 ? "background-color:green;color:white;" : "";
 
             echo "<tr style='" . $color   . "'>";
+
+            // Currency
             echo "<td>";
             echo "<a href='holdings.php?c=" . $item["Currency"] . "&usd=". $btcUsdtRate . "' target='_blank' style=''>";
             if($profitSell > 0) echo "<strong>";
@@ -198,19 +209,25 @@
             echo "&nbsp;<a href='" . $exchange->getCurrencyUrl(array("_market" => "BTC" , "_currency" => $item["Currency"])) . "' target='_blank'>[bittrex]</a>";
             echo "</td>";
 
+            // Units
             echo "<td>" . $item["Balance"] . "</td>";
+
+            // rate
             echo "<td>" . $last ."</td>";
 
+            // Value
             echo "<td>";
             echo $lastEstSellFormatted . " BTC";
             echo " / ";
             echo round(number_format($lastEstSellFormatted*$btcUsdtRate, 8, '.', ''),2) . " USD";
             echo "</td>";
 
+            // Costs / proceeds
             echo "<td>";
             echo $BtcBalanceFormatted;
             echo "</td>";
 
+            // Profit on sell
             echo "<td>";
             echo $profitSell . " BTC";
             echo " / ";
@@ -228,19 +245,14 @@
               $lowestProfitCellCurrencyValue  = $profitSell;
             }
 
-
-
-
-
-
+            // Breakeven rate
             echo "<td>" . $breakEvenRate1 . "</td>";
 
+            // 	Breakeven profit %
             echo "<td>";
             if($breakEvenRate1 > 0) {
-              //if($last > $breakEvenRate1) {
-                $profitFromBreakEven  = (($last - $breakEvenRate1) / $breakEvenRate1) * 100;
-                echo round($profitFromBreakEven,2) . "%";
-              //}
+              $profitFromBreakEven  = (($last - $breakEvenRate1) / $breakEvenRate1) * 100;
+              echo round($profitFromBreakEven,2) . "%";
             } else {
               echo "0%";
             }
