@@ -1,3 +1,6 @@
+v0.15
+- normalize returnvalue getBalance()
+
 v0.14
 - added getBalances()
 

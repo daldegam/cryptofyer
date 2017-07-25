@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class CryptopiaApi
   * @author     Fransjo Leihitu
-  * @version    0.14
+  * @version    0.15
   *
   * Documentation Public Api : https://www.cryptopia.co.nz/Forum/Thread/255
   * Documentation Private Api : https://www.cryptopia.co.nz/Forum/Thread/256
@@ -19,7 +19,7 @@
 
     // class version
     private $_version_major  = "0";
-    private $_version_minor  = "14";
+    private $_version_minor  = "15";
 
     public function __construct($apiKey = null , $apiSecret = null)
     {
@@ -108,7 +108,19 @@
           unset($args["currency"]);
         }
       }
-      return $this->send("GetBalance" , $args);
+      $balanceOBJ = $this->send("GetBalance" , $args);
+      if($balanceOBJ["success"] == true) {
+        $result = array();
+        foreach($balanceOBJ["result"] as $item) {
+          $item["Balance"]  = $item["Total"];
+          $item["Currency"] = $item["Symbol"];
+          $result[] = $item;
+        }
+        $balanceOBJ["result"] = $result;
+        return $balanceOBJ;
+      } else {
+        return $balanceOBJ;
+      }
     }
 
     public function getOrders($args  = null) {
