@@ -31,28 +31,26 @@
   }
   $portfolio  = array();
 
-  $balanceOBJ = $exchange->getCurrencies();
+  $balanceOBJ  = $exchange->getBalance(array("currency" => ""));
   if($balanceOBJ["success"] == true) {
-    $items  = $balanceOBJ["result"];
-    foreach($items as $item) {
-      $balanceOBJ  = $exchange->getBalance(array("currency" => $item["Symbol"]));
-      if($balanceOBJ["success"] == true) {
-        if($balanceOBJ["result"][0]["Total"] > 0) {
+    foreach($balanceOBJ["result"] as $item) {
+      if($item["Total"] > 0) {
+        $item["Available"] = number_format($item["Available"], 8 , '.', '');
+        $item["Total"] = number_format($item["Total"], 8 , '.', '');
+        //$item["_balance"] = $balanceOBJ["result"][0];
 
-          $balanceOBJ["result"][0]["Available"] = number_format($balanceOBJ["result"][0]["Available"], 8 , '.', '');
-          $balanceOBJ["result"][0]["Total"] = number_format($balanceOBJ["result"][0]["Total"], 8 , '.', '');
-          $item["_balance"] = $balanceOBJ["result"][0];
-
-          $tickerOBJ  = $exchange->getTicker(array("_market" => "BTC" , "_currency" => $item["Symbol"]));
-          if($tickerOBJ["success"] == true) {
-            $item["_ticker"]  = $tickerOBJ["result"];
-          }
-
-          $portfolio[]  = $item;
+        $tickerOBJ  = $exchange->getTicker(array("_market" => "BTC" , "_currency" => $item["Symbol"]));
+        if($tickerOBJ["success"] == true) {
+          $item["_ticker"]  = $tickerOBJ["result"];
         }
+
+        $portfolio[]  = $item;
       }
     }
+  } else {
+    debug($balanceOBJ , true);
   }
+
 
   //debug($portfolio , true);
   echo "1 BTC = " . $btcUsdtRate . " USD<br>";
@@ -74,7 +72,7 @@
         $last = 1;
       }
 
-      $btcValue = $portfolio["_balance"]["Total"] * $last;
+      $btcValue = $portfolio["Total"] * $last;
       $btcValue = number_format($btcValue, 10, '.', '');
 
       $usdValue = round(number_format($btcValue * $btcUsdtRate, 8, '.', '') ,  2);
@@ -83,7 +81,7 @@
 
       echo "<tr>";
       echo "<td>" . $portfolio["Symbol"] . "</td>";
-      echo "<td>"  . $portfolio["_balance"]["Total"] . "</td>";
+      echo "<td>"  . $portfolio["Total"] . "</td>";
       echo "<td>"  . $last . "</td>";
       echo "<td>" . $btcValue . " BTC / " . $usdValue ." USD</td>";
       echo "</tr>";
