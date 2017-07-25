@@ -1,3 +1,6 @@
+v0.14
+- added getBalances()
+
 v0.13
 - first start with orderid
 - changed time() to microtime() for nonce
