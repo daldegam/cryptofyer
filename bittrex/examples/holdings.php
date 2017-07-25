@@ -31,6 +31,8 @@
     $btcUsdtRate  = $_GET["usd"];
   }
 
+
+
   /*
   * Get the balance
   */
@@ -57,8 +59,13 @@
   }
 
 
+
+
   echo "<h1>Holdings in  <a href='" . $exchange->getCurrencyUrl(array("market" => "BTC-" . $currency)) . "' target='_blank'>" . $currency ."</a></h1>";
   echo "1 BTC = " . $btcUsdtRate . " USD<br>";
+
+  echo "Current rate : " . $last . " BTC / " . number_format($last * $btcUsdtRate, 8, '.', '') . " USD<br><br>";
+
   $historyBalance = 0;
   $historyUnits   = 0;
   $totalCommision     = 0;
@@ -218,6 +225,8 @@
     } else {
       $breakEvenRate  =$breakEvenRate1;
     }
+
+    //$totalUnitsFilled = number_format($totalUnitsFilled, 8, '.' , '');
 
     $breakEvenRate1  = number_format($breakEvenRate, 8, '.' , '');
     if($breakEvenRate > 0) {
