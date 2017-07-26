@@ -11,8 +11,8 @@
   class KrakenApi extends CryptoExchange implements CryptoExchangeInterface {
 
     // base exchange api url
-    private $exchangeUrl  = "https://api.kraken.com";
-    private $apiVersion   = "";
+    private $exchangeUrl  = "https://api.kraken.com/";
+    private $apiVersion   = "0";
 
     // base url for currency
     private $currencyUrl  = "";
@@ -27,13 +27,69 @@
         $this->apiSecret  = $apiSecret;
 
         parent::setVersion($this->_version_major , $this->_version_minor);
-        parent::setBaseUrl($this->exchangeUrl . "v" . $this->apiVersion . "/");
+        parent::setBaseUrl($this->exchangeUrl . $this->apiVersion . "/");
     }
 
+    private function send($method = null , $args = array() , $secure = true) {
+      if(empty($method)) return array("status" => false , "error" => "method was not defined!");
+
+      // build the POST data string
+      $postdata = http_build_query($args, '', '&');
+
+      $uri  = $this->getBaseUrl();
+      $result = null;
+
+      $ch = curl_init();
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+      // make request
+      if($secure == false) {
+        $uri  = $uri . $method;
+        curl_setopt($ch, CURLOPT_URL, $uri);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array());
+        $result = curl_exec($ch);
+      } else {
+        // TODO !!!
+      }
+
+      if($result===false) {
+        return $this->getErrorReturn(curl_error($ch));
+      } else {
+        $obj = json_decode($result , true);
+        if(!is_array($obj)) {
+          return $this->getErrorReturn("JSON decode error");
+        }
+
+        if(!empty($obj["error"])) {
+          return $this->getErrorReturn($obj["error"]);
+        } else {
+          return $this->getReturn(true,null,$obj["result"]);
+        }
+
+      }
+
+      return $this->getErrorReturn("ERROR sending");
+    }
+
+    public function getMarketPair($market = "" , $currency = "") {
+      $market = str_replace("BTC" , "XBT" , $market);
+      return strtoupper($currency . "" . $market);
+    }
 
     // get ticket information
     public function getTicker($args  = null) {
-      return $this->getErrorReturn("not implemented yet!");
+      if(isSet($args["_market"]) && isSet($args["_currency"])) {
+        $args["market"] = $this->getMarketPair($args["_market"],$args["_currency"]);
+        unset($args["_market"]);
+        unset($args["_currency"]);
+      }
+
+      if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
+      $args["pair"] = $args["market"];
+
+      unset($args["market"]);
+
+      return $this->send("public/Ticker" , $args , false);
     }
 
     // get balance
