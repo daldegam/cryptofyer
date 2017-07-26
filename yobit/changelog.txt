@@ -1,2 +1,5 @@
+v0.2
+- first setup url
+
 v0.1
 It's alive

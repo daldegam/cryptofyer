@@ -1,7 +1,7 @@
-CryptoFyer Yobit v0.1
+CryptoFyer Yobit v0.2
 ==============
 
-PHP client api for Yobit api v0.1
+PHP client api for Yobit
 
 I am NOT associated, I repeat NOT associated to Yobit. Please use at your OWN risk.
 
@@ -11,7 +11,7 @@ Want to help me? You can tip me :)
 
 Exchange Documentation
 ----
-Exchange API documentation:
+Yobit API documentation: https://yobit.net/en/api/
 
 Prerequisite
 ----
