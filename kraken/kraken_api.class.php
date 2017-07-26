@@ -11,7 +11,7 @@
   class KrakenApi extends CryptoExchange implements CryptoExchangeInterface {
 
     // base exchange api url
-    private $exchangeUrl  = "";
+    private $exchangeUrl  = "https://api.kraken.com";
     private $apiVersion   = "";
 
     // base url for currency
