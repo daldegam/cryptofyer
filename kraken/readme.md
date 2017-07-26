@@ -1,7 +1,7 @@
 CryptoFyer Kraken v0.1
 ==============
 
-PHP client api for Kraken api v0.1
+PHP client api for Kraken api
 
 I am NOT associated, I repeat NOT associated to Kraken. Please use at your OWN risk.
 
@@ -11,13 +11,13 @@ Want to help me? You can tip me :)
 
 Exchange Documentation
 ----
-Exchange API documentation:
+Kraken API documentation: https://www.kraken.com/help/api
 
 Prerequisite
 ----
 * PHP 5.3.x
 * Curl
-* Valid api token at Exchange
+* Valid api token at Kraken
 
 
 Config.inc.php

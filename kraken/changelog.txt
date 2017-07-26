@@ -1,2 +1,9 @@
+v0.2
+- added getMarketHistory()
+- added getMarketSpread()
+- added getOrderbook()
+- added getCurrencies()
+- added getAssetPairs()
+
 v0.1
 It's alive
