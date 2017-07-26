@@ -1,2 +1,6 @@
+v0.2
+- basic setup
+- setup getMarketPair()
+
 v0.1
 It's alive

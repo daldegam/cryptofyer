@@ -4,22 +4,23 @@
   * @package    cryptofyer
   * @class    PoloniexApi
   * @author     Fransjo Leihitu
-  * @version    0.1
+  * @version    0.2
   *
-  * API Documentation :
+  * API Documentation : https://poloniex.com/support/api/
   */
   class PoloniexApi extends CryptoExchange implements CryptoExchangeInterface {
 
     // base exchange api url
-    private $exchangeUrl  = "";
-    private $apiVersion   = "";
+    private $exchangeUrl        = "https://poloniex.com/public";
+    private $apiVersion         = "";
+    private $exchangeTradingUrl = "https://poloniex.com/tradingApi";
 
     // base url for currency
     private $currencyUrl  = "";
 
     // class version
     private $_version_major  = "0";
-    private $_version_minor  = "1";
+    private $_version_minor  = "2";
 
     public function __construct($apiKey = null , $apiSecret = null)
     {
@@ -27,7 +28,11 @@
         $this->apiSecret  = $apiSecret;
 
         parent::setVersion($this->_version_major , $this->_version_minor);
-        parent::setBaseUrl($this->exchangeUrl . "v" . $this->apiVersion . "/");
+        parent::setBaseUrl($this->exchangeUrl . $this->apiVersion . "/");
+    }
+
+    public function getMarketPair($market = "" , $currency = "") {
+      return strtoupper($market . "_" . $currency);
     }
 
 

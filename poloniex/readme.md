@@ -1,7 +1,7 @@
 CryptoFyer Poloniex v0.1
 ==============
 
-PHP client api for Poloniex api v0.1
+PHP client api for Poloniex
 
 I am NOT associated, I repeat NOT associated to Poloniex. Please use at your OWN risk.
 
@@ -11,7 +11,7 @@ Want to help me? You can tip me :)
 
 Exchange Documentation
 ----
-Exchange API documentation:
+Poloniex API documentation: https://poloniex.com/support/api/
 
 Prerequisite
 ----
