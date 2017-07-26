@@ -1,3 +1,10 @@
+v0.16
+- normalize returnvalue getOrders()
+- added getOrder
+- normalize cancel()
+- normalize sell()
+- normalize buy()
+
 v0.15
 - normalize returnvalue getBalance()
 

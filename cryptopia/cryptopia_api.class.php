@@ -123,6 +123,22 @@
       }
     }
 
+    public function getOrder($args  = null) {
+      if(!isSet($args["orderid"])) return $this->getErrorReturn("required parameter: orderid");
+
+      $resultOBJ  = $this->getOrders($args);
+      if($resultOBJ["success"] == true) {
+        foreach($resultOBJ["result"] as $result) {
+          if($result["orderid"] == $args["orderid"]) {
+            return $this->getReturn(true , null , $result);
+          }
+        }
+        $this->getErrorReturn("cannot find order: " . $args["orderid"]);
+      } else {
+        return $resultOBJ;
+      }
+    }
+
     public function getOrders($args  = null) {
       if(isSet($args["_market"]) && isSet($args["_currency"])) {
         $args["market"] = $this->getMarketPair($args["_market"],$args["_currency"]);
@@ -134,7 +150,18 @@
         $args["market"] = "";
       }
 
-      return $this->send("GetOpenOrders" , $args);
+      $resultOBJ  = $this->send("GetOpenOrders" , $args);
+      if($resultOBJ["success"] == true) {
+        $result = array();
+        foreach($resultOBJ["result"] as $item) {
+          $item["orderid"]  = $item["OrderId"];
+          $result[] = $item;
+        }
+        $resultOBJ["result"]  = $result;
+        return $resultOBJ;
+      } else {
+        return $resultOBJ;
+      }
     }
 
     public function cancel($args = null) {
@@ -142,7 +169,7 @@
       $args["OrderId"]  = $args["orderid"];
       unset($args["orderid"]);
 
-      if(!isSet($args["type"])) return $this->getErrorReturn("required parameter: type");
+      if(!isSet($args["type"])) $args["type"] = "Trade";
       $args["Type"] = $args["type"];
       unset($args["type"]);
 
@@ -173,7 +200,15 @@
       $args["Amount"] = $args["amount"];
       unset($args["amount"]);
 
-      return $this->send("SubmitTrade" , $args);
+      $resultOBJ = $this->send("SubmitTrade" , $args);
+      if($resultOBJ["success"] == true) {
+        $result = $resultOBJ["result"];
+        $result["orderid"]  = $result["OrderId"];
+        $resultOBJ["result"]  = $result;
+        return $resultOBJ;
+      } else {
+          return $resultOBJ;
+      }
     }
 
     public function sell($args = null) {
@@ -199,7 +234,15 @@
       $args["Amount"] = $args["amount"];
       unset($args["amount"]);
 
-      return $this->send("SubmitTrade" , $args);
+      $resultOBJ = $this->send("SubmitTrade" , $args);
+      if($resultOBJ["success"] == true) {
+        $result = $resultOBJ["result"];
+        $result["orderid"]  = $result["OrderId"];
+        $resultOBJ["result"]  = $result;
+        return $resultOBJ;
+      } else {
+          return $resultOBJ;
+      }
     }
 
     public function getMarket($args = null) {

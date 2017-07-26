@@ -50,6 +50,7 @@ The exchange classes have some required functions to implement:
 * buy() -> place a buy order
 * sell() -> place a sell order
 * getOrders() -> get open orders
+* getOrder()  -> get order
 * cancel() -> cancel order
 * getTicker() -> get currency information
 * getCurrencyUrl() -> get the exchange currency detail url

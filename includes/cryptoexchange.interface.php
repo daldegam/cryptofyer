@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class CryptoExchangeInterface
   * @author     Fransjo Leihitu
-  * @version    0.4
+  * @version    0.5
   *
   */
   interface CryptoExchangeInterface {
@@ -23,6 +23,9 @@
 
     // get open orders
     public function getOrders($args = null) ;
+
+    // get order
+    public function getOrder($args = null) ;
 
     // Get the exchange currency detail url
     public function getCurrencyUrl($args = null);

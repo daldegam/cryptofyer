@@ -1,3 +1,6 @@
+v0.12
+- normalize getOrder()
+
 v0.11
 - uniform orderid
 - cleanup code

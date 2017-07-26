@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class    BittrexxApi
   * @author     Fransjo Leihitu
-  * @version    0.11
+  * @version    0.12
   *
   * API Documentation : https://bittrex.com/home/api
   */
@@ -19,7 +19,7 @@
 
     // class version
     private $_version_major  = "0";
-    private $_version_minor  = "11";
+    private $_version_minor  = "12";
 
     public function __construct($apiKey = null , $apiSecret = null)
     {
@@ -251,7 +251,15 @@
       if(!isSet($args["orderid"])) return $this->getErrorReturn("required parameter: orderid");
       $args["uuid"] = $args["orderid"];
       unset($args["orderid"]);
-      return $this->send("account/getorder" , $args);
+      $resultOBJ  = $this->send("account/getorder" , $args);
+      if($resultOBJ["success"] == true) {
+        $result = $resultOBJ["result"];
+        $result["orderid"]  = $result["OrderUuid"];
+        $resultOBJ["result"]  = $result;
+        return $resultOBJ;
+      } else {
+        return $resultOBJ;
+      }
     }
 
     public function getOrderHistory($args = null) {
