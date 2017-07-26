@@ -1,2 +1,5 @@
+v0.2
+- basic setup
+
 v0.1
 It's alive

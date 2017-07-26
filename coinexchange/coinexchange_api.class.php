@@ -4,18 +4,18 @@
   * @package    cryptofyer
   * @class    CoinexchangeApi
   * @author     Fransjo Leihitu
-  * @version    0.1
+  * @version    0.2
   *
-  * API Documentation :
+  * API Documentation : http://coinexchangeio.github.io/slate/
   */
   class CoinexchangeApi extends CryptoExchange implements CryptoExchangeInterface {
 
     // base exchange api url
-    private $exchangeUrl  = "";
-    private $apiVersion   = "";
+    private $exchangeUrl  = "https://www.coinexchange.io/api/";
+    private $apiVersion   = "1";
 
     // base url for currency
-    private $currencyUrl  = "";
+    private $currencyUrl  = "https://www.coinexchange.io/market/";
 
     // class version
     private $_version_major  = "0";
@@ -30,6 +30,9 @@
         parent::setBaseUrl($this->exchangeUrl . "v" . $this->apiVersion . "/");
     }
 
+    public function getMarketPair($market = "" , $currency = "") {
+      return strtoupper($currency . "/" . $market);
+    }
 
     // get ticket information
     public function getTicker($args  = null) {
