@@ -1,4 +1,4 @@
-CryptoFyer 0.2
+CryptoFyer 0.3
 ==============
 
 A unified framework to connect to different Crypto Exchange websites.
