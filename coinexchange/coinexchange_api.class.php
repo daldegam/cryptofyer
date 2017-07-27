@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class    CoinexchangeApi
   * @author     Fransjo Leihitu
-  * @version    0.2
+  * @version    0.3
   *
   * API Documentation : http://coinexchangeio.github.io/slate/
   */
@@ -19,7 +19,7 @@
 
     // class version
     private $_version_major  = "0";
-    private $_version_minor  = "1";
+    private $_version_minor  = "3";
 
     private $_markets = null;
 
@@ -39,21 +39,23 @@
 
         $uri  = $this->getBaseUrl() . $method;
 
-        debug($uri);
+        $postdata = "";
+        if(!empty($args)) $postdata = http_build_query($args, '', '&');
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_HEADER, 0);
-
-        curl_setopt($ch, CURLOPT_URL,$uri);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_USERAGENT, 'CryptoFyer');
         if($secure == false) {
-
+          if(!empty($postdata)) {
+            $uri  = $uri . "?" . $postdata;
+          }
         } else {
           return $this->getErrorReturn("secure call not implemented yet!");
         }
+        curl_setopt($ch, CURLOPT_URL,$uri);
 
         $execResult = curl_exec($ch);
 
@@ -70,8 +72,10 @@
         } else {
             return $this->getErrorReturn($execResult);
         }
+    }
 
-        //return $this->getErrorReturn("not implemented yet!");
+    public function getMarkets() {
+      return $this->_markets;
     }
 
     public function getMarketsFromExchange() {
@@ -113,9 +117,18 @@
       unset($args["market"]);
       $args["market_id"]  = $marketInfo["MarketID"];
 
-      $result = $this->send("getmarketsummary" , $args , false);
+      $resultOBJ = $this->send("getmarketsummary" , $args , false);
+      if($resultOBJ["success"] == true) {
+        $result = $resultOBJ["result"];
+        $result["Last"] = number_format($result["LastPrice"], 8, '.', '');
+        $result["Bid"] = number_format($result["BidPrice"], 8, '.', '');
+        $result["Ask"] = number_format($result["AskPrice"], 8, '.', '');
 
-      return $result;
+        $resultOBJ["result"]  = $result;
+        return $resultOBJ;
+      }
+
+      return $resultOBJ;
     }
 
     // get balance

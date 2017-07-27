@@ -1,3 +1,9 @@
+v0.3
+- implemented send() method
+- added getMarketsFromExchange()
+- added getMarkets()
+- implemented getTicker()
+
 v0.2
 - basic setup
 

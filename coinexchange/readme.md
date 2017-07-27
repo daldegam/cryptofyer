@@ -1,4 +1,4 @@
-CryptoFyer Coinexchange v0.2
+CryptoFyer Coinexchange v0.3
 ==============
 
 PHP client api for Coinexchange

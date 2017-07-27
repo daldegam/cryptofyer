@@ -13,7 +13,7 @@
   $exchange  = new CoinexchangeApi($config[$exchangeName]["apiKey"] , $config[$exchangeName]["apiSecret"] );
 
   $_market    = "BTC";
-  $_currency  = "FOOT";
+  $_currency  = "ETC";
   $market     = $exchange->getMarketPair($_market , $_currency);
 
 
