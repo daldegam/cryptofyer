@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class    BittrexxApi
   * @author     Fransjo Leihitu
-  * @version    0.12
+  * @version    0.13
   *
   * API Documentation : https://bittrex.com/home/api
   */
@@ -19,7 +19,7 @@
 
     // class version
     private $_version_major  = "0";
-    private $_version_minor  = "12";
+    private $_version_minor  = "13";
 
     public function __construct($apiKey = null , $apiSecret = null)
     {
@@ -96,7 +96,13 @@
         $args["market"] = $this->getMarketPair($args["_market"],$args["_currency"]);
       }
       if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
-      return $this->send("public/getticker" , $args, false);
+      $resultOBJ  = $this->send("public/getmarketsummary" , $args, false);
+      if($resultOBJ["success"]) {
+        $result = $resultOBJ["result"];
+        return $this->getReturn($resultOBJ["success"],$resultOBJ["message"],$result[0]);
+      } else {
+        return $resultOBJ;
+      }
     }
 
     public function getMarketSummary($args = null) {
