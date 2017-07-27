@@ -86,8 +86,17 @@ do {
       $time = time();
       if($prevLast != $last) {
         $direction  = $last > $prevLast ? "+" : "-";
+
+        $diff = 0;
+        if($last > $prevLast ) {
+          $diff = $last -  $prevLast;
+        } else {
+          $diff = $prevLast - $last;
+        }
+        $diff = number_format($diff, 8, '.', '');
+
         fwrite(STDOUT, "\n");
-        fwrite(STDOUT, "[$time] $market $last $direction\n");
+        fwrite(STDOUT, "[$time] $market $last ($direction $diff)\n");
         $prevLast = $last;
       } else {
         fwrite(STDOUT, ".");
