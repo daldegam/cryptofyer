@@ -1,3 +1,9 @@
+v0.4
+- added getMarketSummaries()
+- added getCurrenciesFromExchange(
+- added getOrderbook()
+- implemented getCurrencyUrl()
+
 v0.3
 - implemented send() method
 - added getMarketsFromExchange()

@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class    CoinexchangeApi
   * @author     Fransjo Leihitu
-  * @version    0.3
+  * @version    0.4
   *
   * API Documentation : http://coinexchangeio.github.io/slate/
   */
@@ -19,9 +19,10 @@
 
     // class version
     private $_version_major  = "0";
-    private $_version_minor  = "3";
+    private $_version_minor  = "4";
 
-    private $_markets = null;
+    private $_markets     = null;
+    private $_currencies  = null;
 
     public function __construct($apiKey = null , $apiSecret = null)
     {
@@ -32,6 +33,7 @@
         parent::setBaseUrl($this->exchangeUrl . "v" . $this->apiVersion . "/");
 
         $this->getMarketsFromExchange();
+        $this->getCurrenciesFromExchange();
     }
 
     private function send($method = null , $args = array() , $secure = true) {
@@ -75,6 +77,39 @@
 
     public function getMarkets() {
       return $this->_markets;
+    }
+
+    public function getMarketSummaries() {
+      $resultOBJ  = $this->send("getmarketsummaries" , null , false);
+      if($resultOBJ["success"] == true) {
+        foreach($resultOBJ["result"] as $result) {
+          $result["Last"] = number_format($result["LastPrice"], 8, '.', '');
+          $result["Bid"] = number_format($result["BidPrice"], 8, '.', '');
+          $result["Ask"] = number_format($result["AskPrice"], 8, '.', '');
+        }
+        $resultOBJ["result"]  = $result;
+        return $resultOBJ;
+      } else {
+        return $resultOBJ;
+      }
+    }
+
+    public function getCurrenciesFromExchange() {
+      $result = $this->send("getcurrencies" , null , false);
+      if($result["success"] == true) {
+        $this->_currencies  = null;
+        $this->_currencies  = array();
+        foreach($result["result"] as $item) {
+          $this->_currencies[$item["TickerCode"]]  = $item;
+        }
+        return $this->getReturn(true,null,$this->_currencies);
+      }
+      return $result;
+    }
+
+    public function getCurrency($args = null) {
+      if(!isSet($args["currency"])) return $this->getErrorReturn("required parameter: currency");
+      return $this->send("getmarkets" , $args , false);
     }
 
     public function getMarketsFromExchange() {
@@ -130,6 +165,35 @@
       return $resultOBJ;
     }
 
+    // get ticket information
+    public function getOrderbook($args  = null) {
+      if(isSet($args["_market"]) && isSet($args["_currency"])) {
+        $args["market"] = $this->getMarketPair($args["_market"],$args["_currency"]);
+        unset($args["_market"]);
+        unset($args["_currency"]);
+      }
+      if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
+
+      if(empty($this->_markets)) {
+        $this->getMarketsFromExchange();
+        if(empty($this->_markets)) $this->getErrorReturn("cannot fetch markets from server");
+      }
+      if(!isSet($this->_markets[$args["market"]])) {
+        $this->getErrorReturn("cannot fetch market: " . $args["market"]);
+      }
+      $marketInfo = $this->_markets[$args["market"]];
+
+      unset($args["market"]);
+      $args["market_id"]  = $marketInfo["MarketID"];
+
+      $resultOBJ = $this->send("getorderbook" , $args , false);
+      if($resultOBJ["success"] == true) {
+        /* TODO normalize ? */
+        return $resultOBJ;
+      }
+      return $resultOBJ;
+    }
+
     // get balance
     public function getBalance($args  = null) {
       return $this->getErrorReturn("not implemented yet!");
@@ -157,7 +221,12 @@
 
     // Get the exchange currency detail url
     public function getCurrencyUrl($args = null) {
-      return $this->getErrorReturn("not implemented yet!");
+      if(isSet($args["_market"]) && isSet($args["_currency"])) {
+        $args["market"] = $this->getMarketPair($args["_market"],$args["_currency"]);
+      }
+      if(!isSet($args["market"])) return $this->getErrorReturn("required parameter: market");
+
+      return $this->currencyUrl . $args["market"];
     }
 
     // Get market history
