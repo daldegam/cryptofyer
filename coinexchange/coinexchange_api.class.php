@@ -46,14 +46,13 @@
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_USERAGENT, 'CryptoFyer');
         if($secure == false) {
           if(!empty($postdata)) {
             $uri  = $uri . "?" . $postdata;
           }
         } else {
-          return $this->getErrorReturn("secure call not implemented yet!");
+          return $this->getErrorReturn("secure calls not implemented yet!");
         }
         curl_setopt($ch, CURLOPT_URL,$uri);
 
