@@ -5,14 +5,17 @@
   // exchanges api
   include("../bittrex/bittrex_api.class.php");
   include("../cryptopia/cryptopia_api.class.php");
+  include("../coinexchange/coinexchange_api.class.php");
 
   // exchanges configs
   include("../bittrex/config.inc.php");
   include("../cryptopia/config.inc.php");
+  include("../coinexchange/config.inc.php");
 
   $exchangesClasses = array(
     "bittrex" => "BittrexApi" ,
-    "cryptopia" => "CryptopiaApi"
+    "cryptopia" => "CryptopiaApi",
+    "coinexchange" => "CoinexchangeApi"
   );
   $exchangesInstances = array();
 
