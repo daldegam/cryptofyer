@@ -1,4 +1,4 @@
-CryptoFyer Bittrex v0.12
+CryptoFyer Bittrex v0.14
 ==============
 
 PHP client api for Bittrex api v1.1
@@ -56,7 +56,7 @@ Account API functions
 Example
 ----
 ```php
-$bittrex  = new BittrexxApi($apiKey , $apiSecret );
+$bittrex  = new BittrexApi($apiKey , $apiSecret );
 $result = $bittrex->getBalance(array("currency" => "BTC"));
 ```
 

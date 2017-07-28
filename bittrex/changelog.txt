@@ -1,3 +1,9 @@
+v0.14
+- Renamed Bittrexx to Bittrex
+
+v0.13
+- getTicker() uses getmarketsummary
+
 v0.12
 - normalize getOrder()
 

@@ -61,7 +61,7 @@
   $exchange = null;
   switch($exchangeName) {
     case "bittrex" : {
-      $exchange  = new BittrexxApi($config[$exchangeName]["apiKey"] , $config[$exchangeName]["apiSecret"] );
+      $exchange  = new BittrexApi($config[$exchangeName]["apiKey"] , $config[$exchangeName]["apiSecret"] );
       break;
     }
     case "cryptopia" : {
