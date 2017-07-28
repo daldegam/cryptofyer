@@ -70,7 +70,7 @@ In order to normalize the market literal string you can use the getMarketPair() 
 $_market = "USDT";
 $_currency = "BTC";
 
-$exchange  = new BittrexxApi($apiKey , $apiSecret );
+$exchange  = new BittrexApi($apiKey , $apiSecret );
 $market   = $exchange->getMarketPair($_market , $_currency);
 ```
 Here you see `$market` has the value 'USDT-BTC'.

@@ -10,7 +10,7 @@
   include("../bittrex/config.inc.php");
   include("../cryptopia/config.inc.php");
 
-  $exchangesClasses = array("bittrex" => "BittrexxApi" , "cryptopia" => "CryptopiaApi");
+  $exchangesClasses = array("bittrex" => "BittrexApi" , "cryptopia" => "CryptopiaApi");
   $exchangesInstances = array();
 
   if(!isSet($config)) die("no config found!");
