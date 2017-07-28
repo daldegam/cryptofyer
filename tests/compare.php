@@ -13,7 +13,7 @@
   include("../coinexchange/config.inc.php");
 
   $exchangesClasses = array(
-    "bittrex" => "BittrexxApi" ,
+    "bittrex" => "BittrexApi" ,
     "cryptopia" => "CryptopiaApi",
     "coinexchange" => "CoinexchangeApi"
   );
@@ -58,7 +58,7 @@
   echo "<td><strong>Value</strong></td>";
   echo "<td><strong>Volume BTC</strong></td>";
   echo "</tr>";
-  
+
   foreach($exchangesInstances as $key=>$exchange) {
     echo "<tr>";
     echo "<td>" . $key . "</td>";
