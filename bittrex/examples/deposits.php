@@ -13,7 +13,7 @@
   if(!isSet($config[$exchangeName]["apiKey"])) die("please configure the apiKey");
   if(!isSet($config[$exchangeName]["apiSecret"])) die("please configure the apiSecret");
 
-  $exchange  = new BittrexxApi($config[$exchangeName]["apiKey"] , $config[$exchangeName]["apiSecret"] );
+  $exchange  = new BittrexApi($config[$exchangeName]["apiKey"] , $config[$exchangeName]["apiSecret"] );
 
 
   $totalBtcBalanceFormatted = 0;
