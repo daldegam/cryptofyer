@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class    CoinexchangeApi
   * @author     Fransjo Leihitu
-  * @version    0.4
+  * @version    0.5
   *
   * API Documentation : http://coinexchangeio.github.io/slate/
   */
@@ -19,7 +19,7 @@
 
     // class version
     private $_version_major  = "0";
-    private $_version_minor  = "4";
+    private $_version_minor  = "5";
 
     private $_markets     = null;
     private $_currencies  = null;
@@ -216,6 +216,10 @@
 
     // get order
     public function getOrder($args = null) {
+      return $this->getErrorReturn("not implemented yet!");
+    }
+
+    public function getBalances($args = null) {
       return $this->getErrorReturn("not implemented yet!");
     }
 
