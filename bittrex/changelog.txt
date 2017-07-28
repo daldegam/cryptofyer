@@ -1,3 +1,6 @@
+v0.14
+- Renamed Bittrexx to Bittrex
+
 v0.13
 - getTicker() uses getmarketsummary
 
