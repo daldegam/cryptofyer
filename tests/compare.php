@@ -10,7 +10,10 @@
   include("../bittrex/config.inc.php");
   include("../cryptopia/config.inc.php");
 
-  $exchangesClasses = array("bittrex" => "BittrexApi" , "cryptopia" => "CryptopiaApi");
+  $exchangesClasses = array(
+    "bittrex" => "BittrexApi" ,
+    "cryptopia" => "CryptopiaApi"
+  );
   $exchangesInstances = array();
 
   if(!isSet($config)) die("no config found!");
@@ -50,18 +53,23 @@
   echo "<tr>";
   echo "<td><strong>Exchange</strong></td>";
   echo "<td><strong>Value</strong></td>";
+  echo "<td><strong>Volume BTC</strong></td>";
   echo "</tr>";
+
   foreach($exchangesInstances as $key=>$exchange) {
     echo "<tr>";
     echo "<td>" . $key . "</td>";
 
     $value  = 0;
+    $volume = 0;
     $tickerOBJ  = $exchange->getTicker(array("_market" => $_market , "_currency" => $_currency));
     if($tickerOBJ["success"] == true) {
       $value = number_format($tickerOBJ["result"]["Last"], 8, '.', '');
+      $volume = number_format($tickerOBJ["result"]["Volume"], 8, '.', '');
     }
 
     echo "<td>" . $value . "</td>";
+    echo "<td>" . $volume . "</td>";
 
     echo "</tr>";
   }
