@@ -1,3 +1,6 @@
+CryptoExchange v0.3
+- added send() as a fallback
+
 CryptoExchangeInterface v0.5
 - added getOrder()
 
