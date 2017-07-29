@@ -13,8 +13,8 @@
   $exchange  = new CryptopiaApi($config[$exchangeName]["apiKey"] , $config[$exchangeName]["apiSecret"] );
 
 
-  $_market = "USDT";
-  $_currency = "BTC";
+  $_market = "BTC";
+  $_currency = "ETH";
   $market   = $exchange->getMarketPair($_market , $_currency);
 
 
@@ -26,7 +26,13 @@
   $result = $exchange->getBalance(array("currency" => $_currency));
   debug($result);
 
+
   echo "<h1>Ticker ". $market . "</h1>";
   $result = $exchange->getTicker(array("_market" => $_market , "_currency" => $_currency));
   debug($result);
+
+  /*
+  $result = $exchange->getMarketHistory(array("_market" => $_market , "_currency" => $_currency));
+  debug($result);
+  */
 ?>

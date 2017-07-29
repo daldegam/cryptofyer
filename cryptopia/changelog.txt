@@ -1,3 +1,16 @@
+v0.18
+- implemented getTradeHistory()
+- added submitTip()
+- implemented getTransactions()
+- added getDepositAddress()
+
+
+v0.17
+- added getMarkets()
+- added getTradePairs()
+- code rewrites
+- added getMarketOrderGroups() --> not ready yet
+
 v0.16
 - normalize returnvalue getOrders()
 - added getOrder
