@@ -5,7 +5,7 @@
   * @package    cryptofyer
   * @class CryptoExchange
   * @author     Fransjo Leihitu
-  * @version    0.3
+  * @version    0.4
   *
   */
   class CryptoExchange {
@@ -16,7 +16,7 @@
     private $exchangeUrl   = null;
 
     private $version_major  = "0";
-    private $version_minor  = "3";
+    private $version_minor  = "4";
     private $version  = "";
 
     public function __construct($apiKey = null , $apiSecret = null)
@@ -27,6 +27,14 @@
 
     private function send($method = null , $args = array() , $secure = true) {
       $this->getErrorReturn("please implement the send() function");
+    }
+
+    public function withdraw($args = null) {
+      $this->getErrorReturn("please implement the withdraw() function");
+    }
+
+    public function transfer($args = null) {
+      return $this->getErrorReturn("please implement the transfer() function");
     }
 
     public function setVersion($major = "0" , $minor = "0") {
