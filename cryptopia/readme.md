@@ -1,4 +1,4 @@
-CryptoFyer Cryptopia v0.16
+CryptoFyer Cryptopia v0.18
 ==============
 
 PHP client api for Cryptopia
@@ -26,14 +26,6 @@ Config.inc.php
 * Rename 'config.example.inc.php' to config.inc.php.
 * Edit your key and secret in config.inc.php.
 
-Public API functions
-----
-TODO
-
-Private API functions
-----
-TODO
-
 
 
 Example
@@ -42,13 +34,3 @@ Example
 $cryptopia  = new CryptopiaApi($apiKey , $apiSecret );
 $result = $cryptopia->getBalance(array("currency" => "BTC"));
 ```
-
-Example web files
-----
-TODO
-
-Example CLI files
-----
-I've prepared some example files to get you started in the examples folder to run from your command line.
-* cli_watch.php (command line script to watch a currency)
-* cli_console.php (command line console like to sell/buy/cancel orders)

@@ -15,7 +15,12 @@ Official API documentation: https://bittrex.com/home/api
 
 * Cryptopia (https://www.cryptopia.co.nz/)
 Official Public API documentation: https://www.cryptopia.co.nz/Forum/Thread/255
+
 Official Private API documentation: https://www.cryptopia.co.nz/Forum/Thread/256
+
+* Coinexchange (https://www.coinexchange.io/)
+NOTE, Coinexchange only has public api. 
+
 
 API keys safety
 ----

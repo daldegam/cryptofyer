@@ -5,18 +5,7 @@
 */
 if(php_sapi_name() != 'cli') die("you need to run this script from commandline!");
 
-include("../includes/tools.inc.php");
-include("../includes/cryptoexchange.class.php");
-
-// exchanges api
-include("../bittrex/bittrex_api.class.php");
-include("../cryptopia/cryptopia_api.class.php");
-
-// exchanges configs
-include("../bittrex/config.inc.php");
-include("../cryptopia/config.inc.php");
-
-if(!isSet($config)) die("no config found!");
+include("includes.php");
 
 cls(); // clear screen
 
@@ -40,22 +29,14 @@ if(empty($exchangeName)) {
   $exchangeName = $exchanges[0];
 }
 
-if(!isSet($config) || !isSet($config[$exchangeName])) die("no config for ". $exchangeName ." found!\n");
-if(!isSet($config[$exchangeName]["apiKey"])) die("please configure the apiKey\n");
-if(!isSet($config[$exchangeName]["apiSecret"])) die("please configure the apiSecret\n");
+if(empty($exchanges)) die("no exchange found!\n");
+$exchangeName = strtolower(trim($exchangeName));
+if(!isSet($config) || !isSet($exchangesInstances[$exchangeName])) die("no config for ". $exchangeName ." found!");
 
-$exchange = null;
-switch($exchangeName) {
-  case "bittrex" : {
-    $exchange  = new BittrexApi($config[$exchangeName]["apiKey"] , $config[$exchangeName]["apiSecret"] );
-    break;
-  }
-  case "cryptopia" : {
-    $exchange  = new CryptopiaApi($config[$exchangeName]["apiKey"] , $config[$exchangeName]["apiSecret"] );
-    break;
-  }
-}
+$exchange = $exchangesInstances[$exchangeName];
 if(empty($exchange)) die("cannot init exchange " . $exchangeName);
+
+
 $version  = $exchange->getVersion();
 fwrite(STDOUT, "api version: $version\n");
 
@@ -96,7 +77,7 @@ do {
         $diff = number_format($diff, 8, '.', '');
 
         fwrite(STDOUT, "\n");
-        fwrite(STDOUT, "[$time] $market $last ($direction $diff)\n");
+        fwrite(STDOUT, "[$time] $exchangeName : $market $last ($direction $diff)\n");
         $prevLast = $last;
       } else {
         fwrite(STDOUT, ".");
