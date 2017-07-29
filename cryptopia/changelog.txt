@@ -1,3 +1,10 @@
+v0.18
+- implemented getTradeHistory()
+- added submitTip()
+- implemented getTransactions()
+- added getDepositAddress()
+
+
 v0.17
 - added getMarkets()
 - added getTradePairs()

@@ -1,4 +1,4 @@
-CryptoFyer Cryptopia v0.17
+CryptoFyer Cryptopia v0.18
 ==============
 
 PHP client api for Cryptopia

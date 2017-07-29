@@ -1,4 +1,8 @@
 CryptoExchange v0.3
+- added withdraw() as a fallback
+- added transfer() as a fallback
+
+CryptoExchange v0.3
 - added send() as a fallback
 
 CryptoExchangeInterface v0.5
