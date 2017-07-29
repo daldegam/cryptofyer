@@ -1,3 +1,6 @@
+v0.5
+- added getBalances()
+
 v0.4
 - added getMarketSummaries()
 - added getCurrenciesFromExchange(
