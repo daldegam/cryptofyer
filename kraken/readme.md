@@ -1,4 +1,4 @@
-CryptoFyer Kraken v0.1
+CryptoFyer Kraken v0.3
 ==============
 
 PHP client api for Kraken api

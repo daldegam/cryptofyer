@@ -1,3 +1,7 @@
+v0.3
+- updated getMarketPair()
+- internal caching getCurrencies()
+
 v0.2
 - added getMarketHistory()
 - added getMarketSpread()

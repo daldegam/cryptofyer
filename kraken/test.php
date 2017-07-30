@@ -12,8 +12,8 @@
 
   $exchange  = new KrakenApi($config[$exchangeName]["apiKey"] , $config[$exchangeName]["apiSecret"] );
 
-  $_market    = "BTC";
-  $_currency  = "ETH";
+  $_market    = "USD";
+  $_currency  = "BTC";
   $market     = $exchange->getMarketPair($_market , $_currency);
 
 
@@ -21,13 +21,14 @@
   $result = $exchange->getVersion();
   debug($result);
 
-  /*
-  echo "<h1>Ticker " . $market . "</h1>";
-  $result = $exchange->getTicker(array("_market" => $_market , "_currency" => $_currency));
-  debug($result);
-  */
 
-  $result = $exchange->getMarketSpread(array("_market" => $_market , "_currency" => $_currency));
+  echo "<h1>Ticker " . $market . "</h1>";
+  $result = $exchange->getMarketHistory(array("_market" => $_market , "_currency" => $_currency));
   debug($result);
+
+
+
+  //$result = $exchange->getCurrencies();
+  //debug($result);
 
 ?>

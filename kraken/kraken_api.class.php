@@ -4,7 +4,7 @@
   * @package    cryptofyer
   * @class    KrakenApi
   * @author     Fransjo Leihitu
-  * @version    0.2
+  * @version    0.3
   *
   * API Documentation : https://www.kraken.com/help/api
   */
@@ -19,7 +19,9 @@
 
     // class version
     private $_version_major  = "0";
-    private $_version_minor  = "2";
+    private $_version_minor  = "3";
+
+    private $_currencies  = array();
 
     public function __construct($apiKey = null , $apiSecret = null)
     {
@@ -28,6 +30,8 @@
 
         parent::setVersion($this->_version_major , $this->_version_minor);
         parent::setBaseUrl($this->exchangeUrl . $this->apiVersion . "/");
+
+        $this->getCurrencies();
     }
 
     private function send($method = null , $args = array() , $secure = true) {
@@ -75,6 +79,17 @@
 
     public function getMarketPair($market = "" , $currency = "") {
       $market = str_replace("BTC" , "XBT" , $market);
+      $currency = str_replace("BTC" , "XBT" , $currency);
+
+      $currency = strtoupper($currency);
+      $this->getCurrencies();
+
+      $currency = isSet($this->_currencies[$currency]) ? $this->_currencies[$currency] : "";
+      if(!empty($currency)) $currency = $currency["_currency"];
+
+      $market   = isSet($this->_currencies[$market]) ? $this->_currencies[$market] : "";
+      if(!empty($market)) $market = $market["_currency"];
+
       return strtoupper($currency . "" . $market);
     }
 
@@ -95,7 +110,20 @@
     }
 
     public function getCurrencies($args = null) {
-      return $this->send("public/Assets" , $args , false);
+      if(!empty($this->_currencies)) return $this->getReturn(true,null,$this->_currencies);
+      $returnOBJ = $this->send("public/Assets" , $args , false);
+
+      if($returnOBJ["success"] == true) {
+
+        foreach($returnOBJ["result"] as $key=>$value) {
+          $value["_currency"] = $key;
+          $this->_currencies[$value["altname"]] = $value;
+        }
+
+        $returnOBJ["result"]  = $this->_currencies;
+      }
+
+      return $returnOBJ;
     }
 
     public function getAssetPairs($args = null) {
