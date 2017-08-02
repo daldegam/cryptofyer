@@ -11,48 +11,73 @@ cls(); // clear screen
 
 $exchangeName = "";
 
-fwrite(STDOUT, "Select exchange: \n");
-$count  = 0;
-$exchanges  = array();
-foreach($config as $key=>$value) {
-  fwrite(STDOUT, "[$count] $key\n");
-  $exchanges[]  = $key;
-  $count++;
+// parse CLI args
+$args = array();
+if($argc>1) {
+  parse_str(implode('&',array_slice($argv, 1)), $args);
 }
-$defaultExchange  = $exchanges[0];
-fwrite(STDOUT, "> [$defaultExchange] ");
-$exchangeIndex = fgets(STDIN);
-$exchangeIndex  = trim(preg_replace('/\s+/', '', $exchangeIndex));
-$exchangeName = strtolower($exchanges[$exchangeIndex]);
+$exchangeName = isSet($args["exchange"]) ? strtolower($args["exchange"]) : "";
+if(trim($exchangeName) != "") {
+  if(!isSet($exchangesInstances[$exchangeName])) {
+    fwrite(STDOUT, "[ERROR] $exchangeName does not exists!!\n");
+    $exchangeName  = "";
+  }
+}
+
+$_market    = isSet($args["market"]) ? strtolower($args["market"]) : "";
+$_currency  = isSet($args["currency"]) ? strtolower($args["currency"]) : "";
 
 if(empty($exchangeName)) {
-  $exchangeName = $exchanges[0];
+  fwrite(STDOUT, "Exchanges: \n");
+  $count  = 0;
+  $exchanges  = array();
+  foreach($config as $key=>$value) {
+    fwrite(STDOUT, "[$count] $key\n");
+    $exchanges[]  = $key;
+    $count++;
+  }
+  $defaultExchange  = $exchanges[0];
+  fwrite(STDOUT, "Select exchange : [$defaultExchange] > ");
+  $exchangeIndex = fgets(STDIN);
+  $exchangeIndex  = trim(preg_replace('/\s+/', '', $exchangeIndex));
+  $exchangeName = strtolower($exchanges[$exchangeIndex]);
+
+  if(empty($exchangeName)) {
+    $exchangeName = $exchanges[0];
+  }
+
+  if(empty($exchanges)) die("no exchange found!\n");
 }
 
-if(empty($exchanges)) die("no exchange found!\n");
+
 $exchangeName = strtolower(trim($exchangeName));
 if(!isSet($config) || !isSet($exchangesInstances[$exchangeName])) die("no config for ". $exchangeName ." found!");
 
 $exchange = $exchangesInstances[$exchangeName];
 if(empty($exchange)) die("cannot init exchange " . $exchangeName);
 
+fwrite(STDOUT, "Using exchange: $exchangeName\n");
 
 $version  = $exchange->getVersion();
 fwrite(STDOUT, "api version: $version\n");
 
-$_market  = "BTC";
-fwrite(STDOUT, "Enter market: \n");
-fwrite(STDOUT, "> [$_market] ");
-$marketSelection = fgets(STDIN);
-$marketSelection  = trim(preg_replace('/\s+/', '', $marketSelection));
-$_market  = !empty($marketSelection) ? $marketSelection : $_market;
+if(empty($_market)) {
+  $_market  = "BTC";
+  fwrite(STDOUT, "Enter market: [$_market] > ");
+  $marketSelection = fgets(STDIN);
+  $marketSelection  = trim(preg_replace('/\s+/', '', $marketSelection));
+  $_market  = !empty($marketSelection) ? $marketSelection : $_market;
+}
+fwrite(STDOUT, "Using market: $_market\n");
 
-$_currency  = "ETH";
-fwrite(STDOUT, "Enter currency: \n");
-fwrite(STDOUT, "> [$_currency] ");
-$currencySelection = fgets(STDIN);
-$currencySelection  = trim(preg_replace('/\s+/', '', $currencySelection));
-$_currency  = !empty($currencySelection) ? $currencySelection : $_currency;
+if(empty($_currency)) {
+  $_currency  = "ETH";
+  fwrite(STDOUT, "Enter currency: [$_currency] > ");
+  $currencySelection = fgets(STDIN);
+  $currencySelection  = trim(preg_replace('/\s+/', '', $currencySelection));
+  $_currency  = !empty($currencySelection) ? $currencySelection : $_currency;
+}
+fwrite(STDOUT, "Using currency: $_currency\n");
 
 $market     = $exchange->getMarketPair($_market,$_currency);
 fwrite(STDOUT, "watching: $market on $exchangeName\n");
